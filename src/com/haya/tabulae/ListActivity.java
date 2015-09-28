@@ -7,14 +7,19 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ListActivity extends Activity {
 	
@@ -55,6 +60,23 @@ public class ListActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	private void init() {
+		
+		list = (ListView) findViewById(android.R.id.list);
+		marketSelector = (Spinner) findViewById(R.id.marketSelector);
+		price = (TextView) findViewById(R.id.price);
+		
+		list.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+				Log.d("Tabulae", "Deleting element " + position);
+				Toast.makeText(getApplicationContext(), items.get(position) + " picked!", Toast.LENGTH_SHORT).show();
+				items.remove(position);
+				adapterList.notifyDataSetChanged();
+			}
+		});
+	}
 	
 	private void addItemDialog() {
 		
@@ -96,12 +118,8 @@ public class ListActivity extends Activity {
 		adapterList.notifyDataSetChanged();
 	}
 	
-	private void init() {
-		
-		list = (ListView) findViewById(android.R.id.list);
-		marketSelector = (Spinner) findViewById(R.id.marketSelector);
-		price = (TextView) findViewById(R.id.price);
-	}
+	
+
 	
 	private void mock() {
 		
