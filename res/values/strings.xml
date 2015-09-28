@@ -10,5 +10,7 @@
     
     <string name="dialog_ok">Ok</string>
     <string name="dialog_cancel">Cancel</string>
+    
+    <string name="totalPrice">Total price:</string>
 
 </resources>
