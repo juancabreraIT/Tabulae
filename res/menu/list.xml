@@ -3,9 +3,10 @@
     tools:context="com.haya.tabulae.ListActivity" >
 
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:showAsAction="never"
-        android:title="@string/action_settings"/>
+        android:id="@+id/action_add"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/action_add"
+        android:titleCondensed="@string/action_add"/>
 
 </menu>
