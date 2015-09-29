@@ -25,7 +25,7 @@
             android:name="AA_MODELS"
             android:value="com.haya.tabulae.models.Item,
             				com.haya.tabulae.models.Category,
-            				com.haya.tabulae.models.List" />
+            				com.haya.tabulae.models.ListedItem" />
         
         <activity
             android:name="com.haya.tabulae.activities.ListActivity"

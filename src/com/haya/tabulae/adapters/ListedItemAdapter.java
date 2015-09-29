@@ -11,13 +11,13 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.haya.tabulae.R;
-import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.ListedItem;
 
-public class ItemAdapter extends ArrayAdapter<Item> {
+public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 	
 	private Context context;
 
-	public ItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<Item> objects) {
+	public ListedItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<ListedItem> objects) {
 		super(context, resource, textViewResourceId, objects);
 		this.context = context;
 	}	
@@ -28,8 +28,8 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 		View v = super.getView(position, convertView, parent);		
 		setBackground(v, R.drawable.row_states);
 
-		TextView itemName = (TextView) v.findViewById(R.id.ItemTitle);
-		itemName.setText(getItem(position).getName());
+		TextView itemName = (TextView) v.findViewById(R.id.ItemTitle);				
+		itemName.setText(getItem(position).getItem().getName());
 
 		CheckBox checkBox = (CheckBox) v.findViewById(R.id.Check);
 		checkBox.setTag(position);

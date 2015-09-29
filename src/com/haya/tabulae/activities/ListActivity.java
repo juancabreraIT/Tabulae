@@ -24,21 +24,24 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
-import com.haya.tabulae.adapters.ItemAdapter;
+import com.haya.tabulae.adapters.ListedItemAdapter;
 import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.ListedItem;
 
 public class ListActivity extends Activity {
 	
-	ListView list;
-	Spinner marketSelector;
-	TextView price;
+	private ListView listView;
+	private Spinner marketSelector;
+	private TextView price;
+
+	private ArrayList<ListedItem> listedItems;
+	private ListedItemAdapter adapterListedItems;
 	
 	// Mock
-	ArrayList<Item> items;
-	ItemAdapter adapterList;
-	
-	ArrayList<String> markets = new ArrayList<String>();
-	ArrayAdapter<String> adapterSpinner;
+	final static String DEFAULT_LIST = "My quick list";
+		
+	private ArrayList<String> markets = new ArrayList<String>();
+	private ArrayAdapter<String> adapterSpinner;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -68,15 +71,15 @@ public class ListActivity extends Activity {
 
 	private void init() {
 		
-		list = (ListView) findViewById(android.R.id.list);
+		listView = (ListView) findViewById(android.R.id.list);
 		marketSelector = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 		
-		list.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-				Toast.makeText(getApplicationContext(), items.get(position) + " picked!", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), listedItems.get(position) + " picked!", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
@@ -97,9 +100,8 @@ public class ListActivity extends Activity {
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
 		    	String itemName = input.getText().toString().trim();
-		    	if ( !itemName.isEmpty() ) {
-		    		Item item = new Item(itemName);
-		    		addItem(item);
+		    	if ( !itemName.isEmpty() ) {		    		
+		    		addItem(itemName);
 		    	}
 		    }
 		});
@@ -117,10 +119,19 @@ public class ListActivity extends Activity {
 		dialog.show();
 	}
 	
-	private void addItem(Item item) {
-		items.add(item);
-		item.save();
-		adapterList.notifyDataSetChanged();
+	private void addItem(String itemName) {
+
+		Item item = new Select().from(Item.class).where("name = ?", itemName).executeSingle();
+		
+		if ( item == null ) {
+			item = new Item(itemName);
+			item.save();
+		}
+
+		ListedItem listedItem = new ListedItem(DEFAULT_LIST, item);
+		listedItems.add(listedItem);
+		listedItem.save();
+		adapterListedItems.notifyDataSetChanged();
 	}
 	
 	public void checkItem(View v) {
@@ -128,35 +139,42 @@ public class ListActivity extends Activity {
 		CheckBox checkB = (CheckBox) v;
 		checkB.setChecked(false);	
 		int pos = (Integer) v.getTag();
-		items.get(pos).delete();
-		items.remove(pos);		
-		adapterList.notifyDataSetChanged();
+		listedItems.get(pos).delete();
+		listedItems.remove(pos);
+		
+		adapterListedItems.notifyDataSetChanged();
 	}
 
 	
 	private void mock() {
 		
-		items = new Select().from(Item.class).execute();
+		listedItems = new Select().from(ListedItem.class).execute();
 		
-		if ( items.isEmpty() ) {
+		if ( listedItems.isEmpty() ) {
 			Log.d("Tabulae", "Loading data base 1st time.");
 			// LISTVIEW
-			Item temp = new Item("Tomate");			
-			items.add(temp);
+			Item item = new Item("Tomate");			
+			ListedItem temp = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(temp);
+			item.save();
 			temp.save();
 			
-			temp = new Item("Pan");
-			items.add(temp);
+			item = new Item("Pan");			
+			temp = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(temp);
+			item.save();
 			temp.save();
 
-			temp = new Item("Detergente");
-			items.add(temp);
+			item = new Item("Detergente");
+			temp = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(temp);
+			item.save();
 			temp.save();
 		} else {
 			Log.d("Tabulae", "Data base was loaded.");
 		}
-		adapterList = new ItemAdapter(this, R.layout.list_item, R.id.ItemTitle, items);
-		list.setAdapter(adapterList);	
+		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems);
+		listView.setAdapter(adapterListedItems);	
 		
 		// SPINNER
 		markets.add("Mercadona");

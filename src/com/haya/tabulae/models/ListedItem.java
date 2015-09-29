@@ -4,32 +4,38 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table(name = "List")
-public class List extends Model {
+@Table(name = "ListedItem")
+public class ListedItem extends Model {
 
-	@Column(name = "name", notNull = true)
-	private String name;
+	@Column(name = "list", notNull = true)
+	private String list;
 	
 	@Column(name = "item", notNull = true)
 	private Item item;
 	
-	@Column(name = "amount", notNull = true)
+	@Column(name = "amount")
 	private byte amount;
 	
-	public List() {
+	public ListedItem() {
 		super();
 	}
 
-	public List(String name) {
-		this.name = name;
+	public ListedItem(String name, String itemName) {
+		this.list = name;
+		item = new Item(itemName);
 	}
 	
-	public String getName() {
-		return name;
+	public ListedItem(String name, Item item) {
+		this.list = name;
+		this.item = item;
+	}
+	
+	public String getListName() {
+		return list;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setListName(String name) {
+		this.list = name;
 	}
 
 	public Item getItem() {
@@ -50,7 +56,7 @@ public class List extends Model {
 	
 	@Override
 	public String toString() {
-		return getName();
+		return getItem().getName();
 	}
 	
 }
