@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -31,8 +30,6 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 
 		TextView itemName = (TextView) v.findViewById(R.id.ItemTitle);
 		
-		Log.d("Tabulae", "Count" + getCount());
-		Log.d("Tabulae", "Position" + position);
 		
 		itemName.setText(getItem(position).
 				getName());

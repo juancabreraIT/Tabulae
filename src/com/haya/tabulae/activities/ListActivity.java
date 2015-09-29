@@ -15,6 +15,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -76,8 +77,6 @@ public class ListActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 				Toast.makeText(getApplicationContext(), items.get(position) + " picked!", Toast.LENGTH_SHORT).show();
-				items.remove(position);
-				adapterList.notifyDataSetChanged();
 			}
 		});
 	}
@@ -120,10 +119,19 @@ public class ListActivity extends Activity {
 	
 	private void addItem(Item item) {
 		items.add(item);
+		item.save();
 		adapterList.notifyDataSetChanged();
 	}
 	
-	
+	public void checkItem(View v) {
+		
+		CheckBox checkB = (CheckBox) v;
+		checkB.setChecked(false);	
+		int pos = (Integer) v.getTag();
+		items.get(pos).delete();
+		items.remove(pos);		
+		adapterList.notifyDataSetChanged();
+	}
 
 	
 	private void mock() {
