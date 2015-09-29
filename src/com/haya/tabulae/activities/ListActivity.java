@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.ItemAdapter;
 import com.haya.tabulae.models.Item;
 
 public class ListActivity extends Activity {
@@ -32,8 +33,8 @@ public class ListActivity extends Activity {
 	TextView price;
 	
 	// Mock
-	ArrayList<Item> items = new ArrayList<Item>();
-	ArrayAdapter<Item> adapterList;
+	ArrayList<Item> items;
+	ItemAdapter adapterList;
 	
 	ArrayList<String> markets = new ArrayList<String>();
 	ArrayAdapter<String> adapterSpinner;
@@ -146,7 +147,7 @@ public class ListActivity extends Activity {
 		} else {
 			Log.d("Tabulae", "Data base was loaded.");
 		}
-		adapterList = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1, items);
+		adapterList = new ItemAdapter(this, R.layout.list_item, R.id.ItemTitle, items);
 		list.setAdapter(adapterList);	
 		
 		// SPINNER
