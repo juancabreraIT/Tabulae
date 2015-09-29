@@ -15,6 +15,7 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -36,6 +37,8 @@ public class ListActivity extends Activity {
 
 	private ArrayList<ListedItem> listedItems;
 	private ListedItemAdapter adapterListedItems;
+	
+	private ArrayList<Item> items = new ArrayList<Item>();
 	
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";
@@ -90,16 +93,23 @@ public class ListActivity extends Activity {
 		AlertDialog dialog;
 		builder.setTitle(getResources().getText(R.string.newItem));
 
-		final EditText input = new EditText(this);
-		input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-		input.requestFocus();
-		builder.setView(input);
+		items = new Select().from(Item.class).execute();
+
+		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_dropdown_item_1line, items);
+
+		final AutoCompleteTextView autoText = new AutoCompleteTextView(this);
+		autoText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
+		autoText.requestFocus();
+		autoText.setAdapter(adapter);
+		autoText.setThreshold(2);
+
+		builder.setView(autoText);
 
 		// OK
 		builder.setPositiveButton(getResources().getText(R.string.dialog_ok), new DialogInterface.OnClickListener() { 
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
-		    	String itemName = input.getText().toString().trim();
+		    	String itemName = autoText.getText().toString().trim();
 		    	if ( !itemName.isEmpty() ) {		    		
 		    		addItem(itemName);
 		    	}
