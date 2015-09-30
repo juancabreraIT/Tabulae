@@ -14,7 +14,6 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        
         <meta-data
             android:name="AA_DB_NAME"
             android:value="tabulae.db" />
@@ -25,16 +24,21 @@
             android:name="AA_MODELS"
             android:value="com.haya.tabulae.models.Item,
             				com.haya.tabulae.models.Category,
-            				com.haya.tabulae.models.ListedItem" />
-        
+            				com.haya.tabulae.models.ListedItem,
+            				com.haya.tabulae.models.Market" />
+
         <activity
-            android:name="com.haya.tabulae.activities.ListActivity"
+            android:name=".activities.ListActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.haya.tabulae.activities.NewMarketActivity"
+            android:label="@string/title_activity_new_market" >
         </activity>
     </application>
 
