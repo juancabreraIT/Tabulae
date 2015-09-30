@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -27,6 +28,7 @@ import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.ListedItemAdapter;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.models.Market;
 
 public class ListActivity extends Activity {
 	
@@ -38,17 +40,18 @@ public class ListActivity extends Activity {
 	private ListedItemAdapter adapterListedItems;
 	
 	private ArrayList<Item> items = new ArrayList<Item>();
+
+	private ArrayList<Market> markets;
+	private ArrayAdapter<Market> adapterSpinner;
 	
 	// Mock
-	final static String DEFAULT_LIST = "My quick list";
-		
-	private ArrayList<String> markets = new ArrayList<String>();
-	private ArrayAdapter<String> adapterSpinner;
+	final static String DEFAULT_LIST = "My quick list";	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
+		getActionBar().setBackgroundDrawable(getDrawable(android.R.color.holo_purple));
 		
 		init();
 		mock();
@@ -71,6 +74,15 @@ public class ListActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	
+	// esto DEBERIA RECOGER EL INTENT DE VUELTA DEL ACTIVITY Y TAL
+	@Override
+	public void onResume() {
+	    super.onResume(); 
+
+	    loadMarkets();	    
+	}
+	
 	private void init() {
 		
 		listView = (ListView) findViewById(android.R.id.list);
@@ -84,6 +96,25 @@ public class ListActivity extends Activity {
 				Toast.makeText(getApplicationContext(), listedItems.get(position) + " picked!", Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+	
+	private void loadMarkets() {
+		
+		markets = new Select().from(Market.class).execute();
+		
+		if ( markets.isEmpty() ) {
+			
+			Market market = new Market("Mercadona");
+			markets.add(market);
+			market.save();
+						
+			market = new Market("Aldi");
+			markets.add(market);
+			market.save();	
+		}
+
+		adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+		marketSelector.setAdapter(adapterSpinner);
 	}
 	
 	private void addItemDialog() {
@@ -155,7 +186,9 @@ public class ListActivity extends Activity {
 	}
 
 	public void addMarket(View v) {
-		Toast.makeText(this, "Adding market...", Toast.LENGTH_SHORT).show();
+		
+		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);		
+		startActivity(intent);		
 	}
 	
 	private void mock() {
@@ -188,16 +221,11 @@ public class ListActivity extends Activity {
 		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems);
 		listView.setAdapter(adapterListedItems);	
 		
-		// SPINNER
-		markets.add("Mercadona");
-		markets.add("Aldi");
-		markets.add("Super Sol");
-
-		adapterSpinner = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_dropdown_item, markets);				
-		marketSelector.setAdapter(adapterSpinner);
+		loadMarkets();
 		
 		// TEXTVIEW
-		price.setText("23.42€");
+		int num = (int)(Math.random() * 100);
+		price.setText(num + "€");
 		
 	}
 	
