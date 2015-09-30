@@ -13,6 +13,7 @@
     <string name="title_activity_new_market">NewMarketActivity</string>
     <string name="name">Name:</string>
     <string name="notes">Notes:</string>
+    <string name="market">Market:</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="hello_world">Hello world!</string>
 
