@@ -17,7 +17,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -155,6 +154,9 @@ public class ListActivity extends Activity {
 		adapterListedItems.notifyDataSetChanged();
 	}
 
+	public void addMarket(View v) {
+		Toast.makeText(this, "Adding market...", Toast.LENGTH_SHORT).show();
+	}
 	
 	private void mock() {
 		
