@@ -37,6 +37,7 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 		return v;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void setBackground(View v, int background) {
 		
 		Drawable draw;

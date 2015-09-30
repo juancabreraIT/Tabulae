@@ -37,6 +37,7 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 		return v;
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void setBackground(View v, int background) {
 		
 		Drawable draw;

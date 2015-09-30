@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -21,9 +22,9 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
+import com.haya.tabulae.ItemDetailActivity;
 import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.ListedItemAdapter;
 import com.haya.tabulae.models.Item;
@@ -53,7 +54,7 @@ public class ListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		getActionBar().setBackgroundDrawable(getDrawable(android.R.color.holo_purple));
+		setBackground(android.R.color.holo_purple);
 		
 		init();
 		mock();
@@ -100,7 +101,9 @@ public class ListActivity extends Activity {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-				Toast.makeText(getApplicationContext(), listedItems.get(position) + " picked!", Toast.LENGTH_SHORT).show();
+				
+				Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
+				startActivity(intent);				
 			}
 		});
 	}
@@ -110,18 +113,26 @@ public class ListActivity extends Activity {
 		markets = new Select().from(Market.class).execute();
 		
 		if ( markets.isEmpty() ) {
-			
-			Market market = new Market("Mercadona");
-			markets.add(market);
-			market.save();
-						
-			market = new Market("Aldi");
-			markets.add(market);
-			market.save();	
-		}
 
-		adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
-		marketSelector.setAdapter(adapterSpinner);
+			Market market = new Market("No markets");
+			ArrayList<Market> temp = new ArrayList<Market>(); 
+			temp.add(market);
+		
+			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
+			marketSelector.setAdapter(adapterSpinner);
+			
+//			Market market = new Market("Mercadona");
+//			markets.add(market);
+//			market.save();
+//						
+//			market = new Market("Aldi");
+//			markets.add(market);
+//			market.save();	
+		} else {
+
+			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			marketSelector.setAdapter(adapterSpinner);
+		}
 	}
 	
 	private void addItemDialog() {
@@ -234,6 +245,19 @@ public class ListActivity extends Activity {
 		int num = (int)(Math.random() * 100);
 		price.setText(num + "€");
 		
+	}
+	
+	@SuppressWarnings("deprecation")
+	private void setBackground(int background) {
+		
+		Drawable draw;
+        if(android.os.Build.VERSION.SDK_INT >= 21){
+        	draw = this.getResources().getDrawable(background, this.getTheme());
+        	this.getActionBar().setBackgroundDrawable(draw);
+        } else {
+        	draw = this.getResources().getDrawable(background);
+        	this.getActionBar().setBackgroundDrawable(draw);
+        }
 	}
 	
 }

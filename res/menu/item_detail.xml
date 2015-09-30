@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.haya.tabulae.ItemDetailActivity" >
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@android:drawable/ic_menu_save"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/action_save"
+        android:titleCondensed="@string/action_save"/>
+
+</menu>
