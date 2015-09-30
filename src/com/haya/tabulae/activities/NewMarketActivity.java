@@ -1,6 +1,7 @@
 package com.haya.tabulae.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -37,25 +38,7 @@ public class NewMarketActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_save) {
-			
-			String name = marketName.getText().toString();
-			String notes = marketNotes.getText().toString();
-			
-			if ( name.isEmpty() ) {
-				Toast.makeText(this, "Market name is empty!", Toast.LENGTH_LONG).show();
-				return false;
-			}
-			
-			Market market = new Market(name);
-			
-			if ( !notes.isEmpty() ) {
-				market.setNotes(notes);
-			}
-			
-			market.save();
-			finish();
-			
-			return true;
+			saveMarket();
 		} else if ( id == android.R.id.home) {
 			finish();
 		}
@@ -68,4 +51,32 @@ public class NewMarketActivity extends Activity {
 		marketNotes = (EditText) findViewById(R.id.editMarketNotes);
 		
 	}
+
+	private void saveMarket() {
+		String name = marketName.getText().toString();
+		String notes = marketNotes.getText().toString();
+		
+		if ( name.isEmpty() ) {
+			Toast.makeText(this, "Market name is empty!", Toast.LENGTH_LONG).show();
+			marketName.requestFocus();
+			return;
+		}
+		
+		Market market = new Market(name);
+		
+		if ( !notes.isEmpty() ) {
+			market.setNotes(notes);
+		}
+		
+		market.save();
+		
+		sendResponse();
+		finish();
+	}
+	
+	private void sendResponse() {
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_OK, resultIntent);
+	}
+
 }

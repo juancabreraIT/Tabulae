@@ -44,6 +44,8 @@ public class ListActivity extends Activity {
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
 	
+	private final int NEW_MARKET_RESULT = 100;
+	
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";	
 	
@@ -74,14 +76,19 @@ public class ListActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
-	// esto DEBERIA RECOGER EL INTENT DE VUELTA DEL ACTIVITY Y TAL
 	@Override
-	public void onResume() {
-	    super.onResume(); 
-
-	    loadMarkets();	    
-	}
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		
+		switch(requestCode) {
+			case (NEW_MARKET_RESULT) : {
+			      if (resultCode == Activity.RESULT_OK) {
+			    	  loadMarkets();
+			      }
+			      break;
+			} 
+		}
+	}	
 	
 	private void init() {
 		
@@ -187,8 +194,8 @@ public class ListActivity extends Activity {
 
 	public void addMarket(View v) {
 		
-		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);		
-		startActivity(intent);		
+		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
+		startActivityForResult(intent, NEW_MARKET_RESULT);
 	}
 	
 	private void mock() {
