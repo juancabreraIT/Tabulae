@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,9 +23,9 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
-import com.haya.tabulae.ItemDetailActivity;
 import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.ListedItemAdapter;
 import com.haya.tabulae.models.Item;
@@ -40,12 +41,13 @@ public class ListActivity extends Activity {
 	private ArrayList<ListedItem> listedItems;
 	private ListedItemAdapter adapterListedItems;
 	
-	private ArrayList<Item> items = new ArrayList<Item>();
+	private ArrayList<Item> allItems = new ArrayList<Item>();
 
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
 	
 	private final int NEW_MARKET_RESULT = 100;
+	private final int ITEM_DETAIL = 101;
 	
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";	
@@ -55,6 +57,8 @@ public class ListActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
 		setBackground(android.R.color.holo_purple);
+		// Keep the screen on
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		init();
 		mock();
@@ -80,32 +84,70 @@ public class ListActivity extends Activity {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		
+
 		switch(requestCode) {
-			case (NEW_MARKET_RESULT) : {
+			case (NEW_MARKET_RESULT) :
 			      if (resultCode == Activity.RESULT_OK) {
 			    	  loadMarkets();
 			      }
 			      break;
-			} 
+			case (ITEM_DETAIL) :
+				if (resultCode == Activity.RESULT_OK) {
+					
+				}
 		}
-	}	
+	}
 	
 	private void init() {
 		
 		listView = (ListView) findViewById(android.R.id.list);
 		marketSelector = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
-		
+
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-				
+
 				Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
-				startActivity(intent);				
+				long idItem = listedItems.get(position).getId();
+				intent.putExtra("idItem", idItem);
+
+				Log.d("Tabulae", "Item id: " + idItem);
+				startActivityForResult(intent, ITEM_DETAIL);
 			}
 		});
+	}
+	
+	private void loadItems() {
+		
+		listedItems = new Select().from(ListedItem.class).execute();
+		
+		if ( listedItems.isEmpty() ) {
+			Log.d("Tabulae", "Loading data base 1st time.");
+			// LISTVIEW
+			Item item = new Item("Tomate");			
+			ListedItem temp = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(temp);
+			item.save();
+			temp.save();
+			
+			item = new Item("Pan");			
+			temp = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(temp);
+			item.save();
+			temp.save();
+
+			item = new Item("Detergente");
+			temp = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(temp);
+			item.save();
+			temp.save();
+		} else {
+			Log.d("Tabulae", "Data base was loaded.");
+		}
+		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems);
+		listView.setAdapter(adapterListedItems);		
 	}
 	
 	private void loadMarkets() {
@@ -141,9 +183,9 @@ public class ListActivity extends Activity {
 		AlertDialog dialog;
 		builder.setTitle(getResources().getText(R.string.newItem));
 
-		items = new Select().from(Item.class).execute();
+		allItems = new Select().from(Item.class).execute();
 
-		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_dropdown_item_1line, items);
+		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_dropdown_item_1line, allItems);
 
 		final AutoCompleteTextView autoText = new AutoCompleteTextView(this);
 		autoText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
@@ -208,45 +250,7 @@ public class ListActivity extends Activity {
 		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
 		startActivityForResult(intent, NEW_MARKET_RESULT);
 	}
-	
-	private void mock() {
 		
-		listedItems = new Select().from(ListedItem.class).execute();
-		
-		if ( listedItems.isEmpty() ) {
-			Log.d("Tabulae", "Loading data base 1st time.");
-			// LISTVIEW
-			Item item = new Item("Tomate");			
-			ListedItem temp = new ListedItem(DEFAULT_LIST, item);
-			listedItems.add(temp);
-			item.save();
-			temp.save();
-			
-			item = new Item("Pan");			
-			temp = new ListedItem(DEFAULT_LIST, item);
-			listedItems.add(temp);
-			item.save();
-			temp.save();
-
-			item = new Item("Detergente");
-			temp = new ListedItem(DEFAULT_LIST, item);
-			listedItems.add(temp);
-			item.save();
-			temp.save();
-		} else {
-			Log.d("Tabulae", "Data base was loaded.");
-		}
-		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems);
-		listView.setAdapter(adapterListedItems);	
-		
-		loadMarkets();
-		
-		// TEXTVIEW
-		int num = (int)(Math.random() * 100);
-		price.setText(num + "€");
-		
-	}
-	
 	@SuppressWarnings("deprecation")
 	private void setBackground(int background) {
 		
@@ -258,6 +262,17 @@ public class ListActivity extends Activity {
         	draw = this.getResources().getDrawable(background);
         	this.getActionBar().setBackgroundDrawable(draw);
         }
+	}
+	
+	
+	private void mock() {
+
+		loadItems();		
+		loadMarkets();
+
+		// TEXTVIEW
+		int num = (int)(Math.random() * 100);
+		price.setText(num + "€");		
 	}
 	
 }

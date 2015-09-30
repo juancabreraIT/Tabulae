@@ -41,7 +41,7 @@
             android:label="@string/title_activity_new_market" >
         </activity>
         <activity
-            android:name=".ItemDetailActivity"
+            android:name="com.haya.tabulae.activities.ItemDetailActivity"
             android:label="@string/title_activity_item_detail" >
         </activity>
     </application>

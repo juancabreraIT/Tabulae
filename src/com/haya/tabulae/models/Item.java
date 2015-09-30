@@ -4,7 +4,7 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table(name = "Task")
+@Table(name = "Item")
 public class Item extends Model {
 	
 	@Column(name = "name", notNull = true)
