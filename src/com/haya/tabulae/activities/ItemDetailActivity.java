@@ -3,9 +3,9 @@ package com.haya.tabulae.activities;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
@@ -18,17 +18,21 @@ import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
 
 public class ItemDetailActivity extends Activity {
 
+	private long idItem;
 	private Item item;
 	private EditText editName;
 	private EditText editNotas;
-	private Spinner marketSelector;
-	private TextView textPrice;
+	private Spinner marketSpinner;
+	private EditText textPrice;
 
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
+	
+	private ArrayList<Price> prices;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,15 +45,14 @@ public class ItemDetailActivity extends Activity {
 
 		editName = (EditText) findViewById(R.id.editItemName);
 		editNotas = (EditText) findViewById(R.id.editItemNotes);
-		marketSelector = (Spinner) findViewById(R.id.spinnerMarket);
-		textPrice = (TextView) findViewById(R.id.textPrice);
+		marketSpinner = (Spinner) findViewById(R.id.spinnerMarket);
+		textPrice = (EditText) findViewById(R.id.textPrice);
 
 		init();
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.item_detail, menu);
 		return true;
 	}
@@ -67,8 +70,7 @@ public class ItemDetailActivity extends Activity {
 
 	private void init() {
 
-		long idItem = getIntent().getExtras().getLong("idItem");
-
+		idItem = getIntent().getExtras().getLong("idItem");
 		item = new Select().from(Item.class).where("id = ?", idItem).executeSingle();
 
 		if ( item == null ) {
@@ -76,6 +78,11 @@ public class ItemDetailActivity extends Activity {
 			finish();
 			return;
 		}
+				
+		populateDetails();
+	}
+
+	private void populateDetails() {
 
 		editName.setText(item.getName());
 
@@ -83,15 +90,36 @@ public class ItemDetailActivity extends Activity {
 			editNotas.setText(item.getNotes());
 		}
 
-//		markets = new Select().from(table)
-//		adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
-//		marketSelector.setAdapter(adapterSpinner);	
+		markets = new Select().from(Market.class).execute();
+		
+		if ( markets.isEmpty() ) {
 
-		int price = (int) (Math.random() * 100);
-		textPrice.setText(price + "€");
+			Market market = new Market("No markets");
+			ArrayList<Market> temp = new ArrayList<Market>(); 
+			temp.add(market);
+		
+			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
+			marketSpinner.setAdapter(adapterSpinner);
+		} else {
+			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			marketSpinner.setAdapter(adapterSpinner);			
+		}
+		
+		prices = (ArrayList<Price>) item.prices();				
+
+		long marketId = marketSpinner.getSelectedItemId();
+		
+		Price price = new Select().from(Price.class).where("market = ?", marketId).executeSingle();
+		if ( price == null ) {
+			textPrice.setText("0.00€");
+		} else {
+			textPrice.setText(price.getPrice() + "€");	
+		}		
 	}
-
+	
 	private void saveItem() {
+		
+		
 		
 		finish();
 	}
