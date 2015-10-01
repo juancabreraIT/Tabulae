@@ -52,4 +52,16 @@ public class Market extends Model {
 	public String toString() {
 		return getName();
 	}
+	
+	@Override
+	public boolean equals(Object object) {
+		
+		if ( object instanceof Market ) {
+			Market newMarket = (Market) object;
+			
+			return getId().equals(newMarket.getId());
+		}
+
+		return false;
+	}
 }
