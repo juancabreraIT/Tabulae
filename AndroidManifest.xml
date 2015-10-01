@@ -25,7 +25,8 @@
             android:value="com.haya.tabulae.models.Item,
             				com.haya.tabulae.models.Category,
             				com.haya.tabulae.models.ListedItem,
-            				com.haya.tabulae.models.Market" />
+            				com.haya.tabulae.models.Market,
+            				com.haya.tabulae.models.Price" />
 
         <activity
             android:name=".activities.ListActivity"
