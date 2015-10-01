@@ -1,5 +1,6 @@
 package com.haya.tabulae.activities;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -111,9 +112,11 @@ public class ItemDetailActivity extends Activity {
 		
 		Price price = new Select().from(Price.class).where("market = ?", marketId).executeSingle();
 		if ( price == null ) {
-			textPrice.setText("0.00€");
+			textPrice.setText("0.00");
 		} else {
-			textPrice.setText(price.getPrice() + "€");	
+			DecimalFormat df = new DecimalFormat();
+			df.setMaximumFractionDigits(2);
+			textPrice.setText(df.format(price.getPrice()));	
 		}		
 	}
 	
