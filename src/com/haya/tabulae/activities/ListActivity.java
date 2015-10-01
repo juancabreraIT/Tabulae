@@ -1,12 +1,12 @@
 package com.haya.tabulae.activities;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -31,13 +30,14 @@ import com.haya.tabulae.adapters.ListedItemAdapter;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.ListedItem;
 import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
 
 public class ListActivity extends Activity {
 	
 	private ListView listView;
 	private Spinner marketSpinner;
 	private TextView price;
-
+		
 	private ArrayList<ListedItem> listedItems;
 	private ListedItemAdapter adapterListedItems;
 	
@@ -146,7 +146,7 @@ public class ListActivity extends Activity {
 		} else {
 			Log.d("Tabulae", "Data base was loaded.");
 		}
-		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems);
+		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems, marketSpinner);
 		listView.setAdapter(adapterListedItems);		
 	}
 	
@@ -156,20 +156,22 @@ public class ListActivity extends Activity {
 		
 		if ( markets.isEmpty() ) {
 
-			Market market = new Market("No markets");
-			ArrayList<Market> temp = new ArrayList<Market>(); 
-			temp.add(market);
+//			Market market = new Market("No markets");
+//			ArrayList<Market> temp = new ArrayList<Market>(); 
+//			temp.add(market);
 		
-			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
-			marketSpinner.setAdapter(adapterSpinner);
+//			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
+//			marketSpinner.setAdapter(adapterSpinner);
 			
-//			Market market = new Market("Mercadona");
-//			markets.add(market);
-//			market.save();
+			Market market = new Market("Mercadona");
+			markets.add(market);
+			market.save();
 //						
 //			market = new Market("Aldi");
 //			markets.add(market);
-//			market.save();	
+//			market.save();
+			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			marketSpinner.setAdapter(adapterSpinner);
 		} else {
 
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
@@ -232,6 +234,30 @@ public class ListActivity extends Activity {
 		listedItems.add(listedItem);
 		listedItem.save();
 		adapterListedItems.notifyDataSetChanged();
+		
+		recalculatePrice();
+	}
+	
+	private void recalculatePrice() {
+		
+		float totalPrice = 0.0f;
+		Market selectedMarket = (Market) marketSpinner.getSelectedItem();
+		ArrayList<Price> itemPrices;
+				
+		for(ListedItem listedItem : listedItems) {
+			itemPrices = (ArrayList<Price>) listedItem.getItem().prices();
+			
+			for(Price price : itemPrices) {
+				if ( price.getMarket().equals(selectedMarket) ) {
+					totalPrice += price.getPrice();
+				}
+			}
+		}
+		
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		
+		price.setText(df.format(totalPrice) + "€");
 	}
 	
 	public void checkItem(View v) {
@@ -242,6 +268,7 @@ public class ListActivity extends Activity {
 //		listedItems.get(pos).delete();
 //		listedItems.remove(pos);	
 		
+		// add to boughtItems or something like that
 		adapterListedItems.notifyDataSetChanged();
 	}
 
@@ -265,14 +292,43 @@ public class ListActivity extends Activity {
 	}
 	
 	
+
+	
+	
 	private void mock() {
 
 		loadItems();		
 		loadMarkets();
+		loadPrices();
+		
+		recalculatePrice();
+	}
+	
+	private void loadPrices() {
+		
+		ArrayList<Price> prices = new Select().from(Price.class).execute();
+		
+		if ( prices.isEmpty() ) {
 
-		// TEXTVIEW
-		int num = (int)(Math.random() * 100);
-		price.setText(num + "€");		
+//			Market market = new Market("No markets");
+//			ArrayList<Market> temp = new ArrayList<Market>(); 
+//			temp.add(market);
+		
+//			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
+//			marketSpinner.setAdapter(adapterSpinner);
+			
+			for(ListedItem listedItem : listedItems) {
+				Market market = (Market) marketSpinner.getSelectedItem();
+				Price price = new Price(listedItem.getItem(), market, (float) Math.random() * 15);
+				price.save();				
+			}
+			
+//			market = new Market("Aldi");
+//			markets.add(market);
+//			market.save();
+			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			marketSpinner.setAdapter(adapterSpinner);
+		}
 	}
 	
 }

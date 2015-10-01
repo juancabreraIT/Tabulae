@@ -9,18 +9,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.haya.tabulae.R;
 import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
 
 public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 	
 	private Context context;
+	private Spinner spinner;
 
-	public ListedItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<ListedItem> objects) {
+	public ListedItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<ListedItem> objects, Spinner spinner) {
 		super(context, resource, textViewResourceId, objects);
 		this.context = context;
+		this.spinner = spinner;
 	}
 	
 	@Override
@@ -28,9 +34,11 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 
 		View v = super.getView(position, convertView, parent);		
 		setBackground(v, R.drawable.row_states);
+		
+		ListedItem listedItem = getItem(position);
 
 		TextView itemName = (TextView) v.findViewById(R.id.ItemTitle);				
-		itemName.setText(getItem(position).getItem().getName());
+		itemName.setText(listedItem.getItem().getName());
 		
 		CheckBox checkBox = (CheckBox) v.findViewById(R.id.Check);
 		checkBox.setTag(position);
@@ -40,6 +48,19 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 		} else {
 			itemName.setPaintFlags(itemName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
 		}
+		
+		ImageView dolarImg = (ImageView) v.findViewById(R.id.imageDolar);
+				
+		Market selectMarket = (Market) spinner.getSelectedItem();
+		
+		for(Price price : listedItem.getItem().prices()) {
+			if ( price.getMarket().equals(selectMarket) ) {
+				dolarImg.setVisibility(View.VISIBLE);
+				return v;
+			}
+		}
+				
+		dolarImg.setVisibility(View.INVISIBLE);		
 
 		return v;
 	}
