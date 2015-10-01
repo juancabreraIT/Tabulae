@@ -1,5 +1,7 @@
 package com.haya.tabulae.models;
 
+import java.util.List;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -12,6 +14,10 @@ public class Category extends Model {
 	
 	public Category() {
 		super();
+	}
+	
+	public List<Item> items() {
+		return getMany(Item.class, "category");
 	}
 	
 	public Category(String name) {

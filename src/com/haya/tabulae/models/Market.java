@@ -1,5 +1,7 @@
 package com.haya.tabulae.models;
 
+import java.util.List;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -12,6 +14,10 @@ public class Market extends Model {
 	
 	@Column(name = "notes")
 	private String notes;
+	
+	public List<Price> prices() {
+		return getMany(Price.class, "item");
+	}
 	
 	public Market() {
 		super();
