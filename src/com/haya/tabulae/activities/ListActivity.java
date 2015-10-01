@@ -35,7 +35,7 @@ import com.haya.tabulae.models.Market;
 public class ListActivity extends Activity {
 	
 	private ListView listView;
-	private Spinner marketSelector;
+	private Spinner marketSpinner;
 	private TextView price;
 
 	private ArrayList<ListedItem> listedItems;
@@ -101,7 +101,7 @@ public class ListActivity extends Activity {
 	private void init() {
 		
 		listView = (ListView) findViewById(android.R.id.list);
-		marketSelector = (Spinner) findViewById(R.id.marketSelector);
+		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -161,7 +161,7 @@ public class ListActivity extends Activity {
 			temp.add(market);
 		
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
-			marketSelector.setAdapter(adapterSpinner);
+			marketSpinner.setAdapter(adapterSpinner);
 			
 //			Market market = new Market("Mercadona");
 //			markets.add(market);
@@ -173,7 +173,7 @@ public class ListActivity extends Activity {
 		} else {
 
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
-			marketSelector.setAdapter(adapterSpinner);
+			marketSpinner.setAdapter(adapterSpinner);
 		}
 	}
 	
