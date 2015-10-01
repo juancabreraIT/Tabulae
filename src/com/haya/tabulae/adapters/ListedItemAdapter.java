@@ -3,6 +3,7 @@ package com.haya.tabulae.adapters;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,8 +21,8 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 	public ListedItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<ListedItem> objects) {
 		super(context, resource, textViewResourceId, objects);
 		this.context = context;
-	}	
-
+	}
+	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -30,9 +31,15 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 
 		TextView itemName = (TextView) v.findViewById(R.id.ItemTitle);				
 		itemName.setText(getItem(position).getItem().getName());
-
+		
 		CheckBox checkBox = (CheckBox) v.findViewById(R.id.Check);
 		checkBox.setTag(position);
+		
+		if ( checkBox.isChecked() ) {
+			itemName.setPaintFlags( itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+		} else {
+			itemName.setPaintFlags(itemName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+		}
 
 		return v;
 	}

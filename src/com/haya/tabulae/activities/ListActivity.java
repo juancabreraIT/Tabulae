@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
@@ -23,7 +24,6 @@ import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
@@ -236,11 +236,11 @@ public class ListActivity extends Activity {
 	
 	public void checkItem(View v) {
 		
-		CheckBox checkB = (CheckBox) v;
-		checkB.setChecked(false);	
-		int pos = (Integer) v.getTag();
-		listedItems.get(pos).delete();
-		listedItems.remove(pos);
+//		CheckBox checkB = (CheckBox) v;
+//		checkB.setChecked(false);	
+//		int pos = (Integer) v.getTag();
+//		listedItems.get(pos).delete();
+//		listedItems.remove(pos);	
 		
 		adapterListedItems.notifyDataSetChanged();
 	}
