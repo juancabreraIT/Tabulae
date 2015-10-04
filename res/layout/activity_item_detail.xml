@@ -101,7 +101,7 @@
 		    android:layout_height="wrap_content"
 		    android:layout_marginRight="10dp"
 		    android:hint="@string/zero_value"
-		    android:inputType="textCapSentences"
+		    android:inputType="numberDecimal"
 		    android:textAppearance="?android:attr/textAppearanceLarge" />
 		
 		<TextView
