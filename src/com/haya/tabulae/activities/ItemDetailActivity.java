@@ -7,6 +7,9 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -30,9 +33,9 @@ public class ItemDetailActivity extends Activity {
 
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
-	
-	private ArrayList<Price> prices;
 
+	private Market selectedMarket;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,9 +47,24 @@ public class ItemDetailActivity extends Activity {
 
 		editName = (EditText) findViewById(R.id.editItemName);
 		editNotas = (EditText) findViewById(R.id.editItemNotes);
-		marketSpinner = (Spinner) findViewById(R.id.spinnerMarket);
+		marketSpinner = (Spinner) findViewById(R.id.spinnerMarket);		
 		textPrice = (EditText) findViewById(R.id.textPrice);
 
+		marketSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+
+				selectedMarket = (Market) marketSpinner.getSelectedItem();
+				populatePrice();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+
+			}
+		});
+		
 		init();
 	}
 
@@ -67,29 +85,37 @@ public class ItemDetailActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	
 	private void init() {
 
 		idItem = getIntent().getExtras().getLong("idItem");
 		item = new Select().from(Item.class).where("id = ?", idItem).executeSingle();
+		
 
 		if ( item == null ) {
 			Toast.makeText(this, "Ups.. something went wrong :_(", Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
+						
+		markets = new Select().from(Market.class).execute();
 				
-		populateDetails();
+		populateNameNotes();
+		populateMarkets();
+		selectedMarket = (Market) marketSpinner.getSelectedItem();
+		populatePrice();
 	}
 
-	private void populateDetails() {
-
+	private void populateNameNotes() {
+		
 		editName.setText(item.getName());
 
 		if ( item.getNotes() != null ) {
 			editNotas.setText(item.getNotes());
-		}
-
-		markets = new Select().from(Market.class).execute();
+		}		
+	}
+	
+	private void populateMarkets() {
 		
 		if ( markets.isEmpty() ) {
 
@@ -102,40 +128,29 @@ public class ItemDetailActivity extends Activity {
 		} else {
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);			
-		}
+		}		
+	}
 		
-		prices = (ArrayList<Price>) item.prices();				
+	private void populatePrice() {
 
-		long marketId = marketSpinner.getSelectedItemId();
-		
-		Price price = new Select().from(Price.class).where("market = ?", marketId).executeSingle();
-		if ( price == null ) {
-			textPrice.setText("0.00");
-		} else {
+		String newPrice = "";
+		Price price = new Select().from(Price.class).where("market = ? AND item = ?", selectedMarket.getId(), idItem).executeSingle();
+
+		if ( price != null ) {
 			DecimalFormat df = new DecimalFormat();
 			df.setMaximumFractionDigits(2);
-			textPrice.setText(df.format(price.getPrice()));	
-		}		
+			newPrice = df.format(price.getPrice());
+		} 	
+
+		textPrice.setText(newPrice);
 	}
 	
 	private void saveItem() {
 		
-		
-		
+		/* 
+		 * TO DO
+		 */
 		finish();
 	}
-
-//	@SuppressWarnings("deprecation")
-//	private void setBackground(int background) {
-//		
-//		Drawable draw;
-//        if(android.os.Build.VERSION.SDK_INT >= 21){
-//        	draw = this.getResources().getDrawable(background, this.getTheme());
-//        	this.getActionBar().setBackgroundDrawable(draw);
-//        } else {
-//        	draw = this.getResources().getDrawable(background);
-//        	this.getActionBar().setBackgroundDrawable(draw);
-//        }
-//	}
 
 }

@@ -16,5 +16,6 @@
     <string name="market">Market:</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="euro">€</string>
+    <string name="zero_value">0.00</string>
 
 </resources>
