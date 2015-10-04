@@ -33,7 +33,7 @@ import com.haya.tabulae.models.Market;
 import com.haya.tabulae.models.Price;
 import com.haya.tabulae.utils.Utils;
 
-public class ListActivity extends Activity {
+public class ListActivity extends Activity implements OnItemClickListener {
 
 	private ListView listView;
 	private Spinner marketSpinner;
@@ -73,6 +73,17 @@ public class ListActivity extends Activity {
 	}
 
 	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+
+		Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
+		long idItem = listedItems.get(position).getId();
+		intent.putExtra("idItem", idItem);
+	
+		Log.d("Tabulae", "Item id: " + idItem);
+		startActivityForResult(intent, ITEM_DETAIL);			
+	}
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
 		if (id == R.id.action_add) {
@@ -105,19 +116,8 @@ public class ListActivity extends Activity {
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 
-		listView.setOnItemClickListener(new OnItemClickListener() {
+		listView.setOnItemClickListener(this);
 
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-
-				Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
-				long idItem = listedItems.get(position).getId();
-				intent.putExtra("idItem", idItem);
-
-				Log.d("Tabulae", "Item id: " + idItem);
-				startActivityForResult(intent, ITEM_DETAIL);
-			}
-		});
 	}
 
 	private void loadItems() {
@@ -282,23 +282,6 @@ public class ListActivity extends Activity {
 		startActivityForResult(intent, NEW_MARKET_RESULT);
 	}
 		
-//	@SuppressWarnings("deprecation")
-//	private void setBackground(int background) {
-//		
-//		Drawable draw;
-//        if(android.os.Build.VERSION.SDK_INT >= 21){
-//        	draw = this.getResources().getDrawable(background, this.getTheme());
-//        	this.getActionBar().setBackgroundDrawable(draw);
-//        } else {
-//        	draw = this.getResources().getDrawable(background);
-//        	this.getActionBar().setBackgroundDrawable(draw);
-//        }
-//	}
-//	
-	
-
-	
-	
 	private void mock() {
 
 		loadItems();		
@@ -313,26 +296,17 @@ public class ListActivity extends Activity {
 		ArrayList<Price> prices = new Select().from(Price.class).execute();
 		
 		if ( prices.isEmpty() ) {
-
-//			Market market = new Market("No markets");
-//			ArrayList<Market> temp = new ArrayList<Market>(); 
-//			temp.add(market);
-		
-//			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
-//			marketSpinner.setAdapter(adapterSpinner);
 			
 			for(ListedItem listedItem : listedItems) {
 				Market market = (Market) marketSpinner.getSelectedItem();
 				Price price = new Price(listedItem.getItem(), market, (float) Math.random() * 15);
 				price.save();				
 			}
-			
-//			market = new Market("Aldi");
-//			markets.add(market);
-//			market.save();
+
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
 		}
 	}
+
 	
 }
