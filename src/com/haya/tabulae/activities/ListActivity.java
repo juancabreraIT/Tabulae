@@ -33,25 +33,25 @@ import com.haya.tabulae.models.Market;
 import com.haya.tabulae.models.Price;
 
 public class ListActivity extends Activity {
-	
+
 	private ListView listView;
 	private Spinner marketSpinner;
 	private TextView price;
-		
+
 	private ArrayList<ListedItem> listedItems;
 	private ListedItemAdapter adapterListedItems;
-	
+
 	private ArrayList<Item> allItems = new ArrayList<Item>();
 
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
-	
+
 	private final int NEW_MARKET_RESULT = 100;
 	private final int ITEM_DETAIL = 101;
-	
+
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -97,7 +97,7 @@ public class ListActivity extends Activity {
 				}
 		}
 	}
-	
+
 	private void init() {
 		
 		listView = (ListView) findViewById(android.R.id.list);
@@ -118,7 +118,7 @@ public class ListActivity extends Activity {
 			}
 		});
 	}
-	
+
 	private void loadItems() {
 		
 		listedItems = new Select().from(ListedItem.class).execute();
