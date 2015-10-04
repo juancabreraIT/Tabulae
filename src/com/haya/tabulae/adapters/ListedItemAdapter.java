@@ -1,6 +1,8 @@
 package com.haya.tabulae.adapters;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 import android.content.Context;
 import android.graphics.Paint;
@@ -22,12 +24,48 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 	
 	private Context context;
 	private Spinner spinner;
-
+	
+	private HashMap<Integer, Boolean> mSelection = new HashMap<Integer, Boolean>();
+	
+	
 	public ListedItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<ListedItem> objects, Spinner spinner) {
 		super(context, resource, textViewResourceId, objects);
 		this.context = context;
 		this.spinner = spinner;
 	}
+	
+	
+	
+	
+	
+    public void setNewSelection(int position, boolean value) {
+        mSelection.put(position, value);
+        notifyDataSetChanged();
+    }
+	
+    public boolean isPositionChecked(int position) {
+        Boolean result = mSelection.get(position);
+        return result == null ? false : result;
+    }
+    
+    public Set<Integer> getCurrentCheckedPosition() {
+        return mSelection.keySet();
+    }
+    
+    public void removeSelection(int position) {
+        mSelection.remove(position);
+        notifyDataSetChanged();
+    }    
+    
+    public void clearSelection() {
+        mSelection = new HashMap<Integer, Boolean>();
+        notifyDataSetChanged();
+    }    
+
+
+	
+	
+	
 	
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -49,6 +87,10 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 			itemName.setPaintFlags(itemName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
 		}
 		
+		if (mSelection.get(position) != null) {
+        	v.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light));// this is a selected position so make it red
+        }
+		
 		ImageView dolarImg = (ImageView) v.findViewById(R.id.imageDolar);
 				
 		Market selectMarket = (Market) spinner.getSelectedItem();
@@ -59,8 +101,8 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 				return v;
 			}
 		}
-				
-		dolarImg.setVisibility(View.INVISIBLE);		
+
+		dolarImg.setVisibility(View.INVISIBLE);
 
 		return v;
 	}

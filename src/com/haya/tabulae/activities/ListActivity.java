@@ -9,18 +9,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
@@ -33,6 +38,8 @@ import com.haya.tabulae.utils.Utils;
 
 public class ListActivity extends Activity implements OnItemClickListener {
 
+	private ActionMode actionMode;
+	
 	private ListView listView;
 	private Spinner marketSpinner;
 	private TextView price;
@@ -109,13 +116,86 @@ public class ListActivity extends Activity implements OnItemClickListener {
 	}
 
 	private void init() {
-		
+
 		listView = (ListView) findViewById(android.R.id.list);
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 
 		listView.setOnItemClickListener(this);
+		
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		
+		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			
+			private int numSelected = 0;
+			
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				MenuItem item = menu.findItem(R.id.item_edit);
+	            if (numSelected == 1) {        	       
+	            	item.setVisible(true);	        	   
+	        	} else {
+	        		item.setVisible(false);	        	      
+	        	}   
+            	return true;
+			}
+			
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				adapterListedItems.clearSelection();
+			}
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				numSelected = 0;
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.contextual_menu, menu);
+                actionMode = mode;
+                return true;
+			}
+			
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            	switch (item.getItemId()) {
 
+                case R.id.item_delete:
+//                    deleteCategoryDialog(numSelected, mode);
+                	Toast.makeText(getApplicationContext(), "Deleting item...", Toast.LENGTH_SHORT).show();
+                    numSelected = 0;
+                    break;
+
+                case R.id.item_edit:
+//                	editCategoryDialog();
+                	Toast.makeText(getApplicationContext(), "Editing item...", Toast.LENGTH_SHORT).show();
+                	mode.finish();
+                	break;
+            }                
+            return false;
+			}
+			
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+				if (checked) {
+                    numSelected++;
+                    adapterListedItems.setNewSelection(position, checked);
+                } else {
+                    numSelected--;
+                    adapterListedItems.removeSelection(position);
+                }
+                mode.setTitle(numSelected + " selected");
+                mode.invalidate();
+			}
+		});
+	
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				
+				listView.setItemChecked(position, !adapterListedItems.isPositionChecked(position));
+				return false;
+			}
+		});
 	}
 
 	private void loadItems() {
