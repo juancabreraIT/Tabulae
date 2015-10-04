@@ -11,13 +11,13 @@ public class Category extends Model {
 
 	@Column(name = "name", notNull = true)
 	private String name;
+		
+	public List<Item> items() {
+		return getMany(Item.class, "category");
+	}
 	
 	public Category() {
 		super();
-	}
-	
-	public List<Item> items() {
-		return getMany(Item.class, "category");
 	}
 	
 	public Category(String name) {

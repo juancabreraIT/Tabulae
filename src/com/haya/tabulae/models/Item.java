@@ -28,6 +28,7 @@ public class Item extends Model {
 	
 	public Item(String name) {
 		this.name = name;
+		this.notes = "";
 	}	
 	
 	public String getName() {

@@ -22,7 +22,7 @@ public class ListedItem extends Model {
 
 	public ListedItem(String name, String itemName) {
 		this.list = name;
-		item = new Item(itemName);
+		this.item = new Item(itemName);
 	}
 	
 	public ListedItem(String name, Item item) {

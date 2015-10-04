@@ -25,6 +25,7 @@ public class Market extends Model {
 	
 	public Market(String name) {
 		this.name = name;
+		this.notes = "";
 	}
 	
 	public Market(String name, String notes) {
