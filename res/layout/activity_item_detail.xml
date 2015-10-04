@@ -27,7 +27,8 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:ems="10"
-	        android:inputType="textCapSentences" >
+	        android:inputType="textCapSentences"
+	        android:textAppearance="?android:attr/textAppearanceLarge" >
 	
 	        <requestFocus />
 	    </EditText>        
@@ -53,7 +54,8 @@
 	        android:layout_height="wrap_content"
 	        android:ems="10"
 	        android:inputType="textCapSentences"
-	        android:lines="5" >
+	        android:lines="5"
+	        android:textAppearance="?android:attr/textAppearanceLarge" >
 	
 	    </EditText>        
                 
@@ -94,12 +96,13 @@
 	        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 		<EditText
-	        android:id="@+id/textPrice"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_marginRight="10dp"	        
-	        android:textAppearance="?android:attr/textAppearanceLarge"
-	        android:inputType="textCapSentences" />
+		    android:id="@+id/textPrice"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_marginRight="10dp"
+		    android:hint="@string/zero_value"
+		    android:inputType="textCapSentences"
+		    android:textAppearance="?android:attr/textAppearanceLarge" />
 		
 		<TextView
 	        android:id="@+id/textView7"
