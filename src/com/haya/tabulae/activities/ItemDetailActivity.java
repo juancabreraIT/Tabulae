@@ -154,7 +154,7 @@ public class ItemDetailActivity extends Activity {
 
 	private void storeTempPrice() {
 		
-		String tempPrice = textPrice.getText().toString();
+		String tempPrice = textPrice.getText().toString().trim();
 		if ( tempPrice != null && !tempPrice.isEmpty() ) {
 			tempPrices.put(selectedMarket.getId(), Float.valueOf(tempPrice));	
 		}
@@ -162,8 +162,8 @@ public class ItemDetailActivity extends Activity {
 	
 	private void saveItem() {
 
-		Item newItem = new Item(editName.getText().toString());
-		newItem.setNotes(editNotas.getText().toString());
+		Item newItem = new Item(editName.getText().toString().trim());
+		newItem.setNotes(editNotas.getText().toString().trim());
 		
 		if ( !item.isSimilar(newItem) ) {
 			item.setName(newItem.getName());

@@ -54,8 +54,8 @@ public class NewMarketActivity extends Activity {
 	}
 
 	private void saveMarket() {
-		String name = marketName.getText().toString();
-		String notes = marketNotes.getText().toString();
+		String name = marketName.getText().toString().trim();
+		String notes = marketNotes.getText().toString().trim();
 		
 		if ( name.isEmpty() ) {
 			Toast.makeText(this, "Market name is empty!", Toast.LENGTH_LONG).show();
