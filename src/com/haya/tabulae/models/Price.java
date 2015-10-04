@@ -1,5 +1,8 @@
 package com.haya.tabulae.models;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
@@ -23,7 +26,7 @@ public class Price extends Model {
 	public Price(Item item, Market market, float price) {
 		this.item = item;
 		this.market = market;
-		this.price = price;
+		this.setPrice(price);
 	}
 
 	public Item getItem() {
@@ -47,7 +50,14 @@ public class Price extends Model {
 	}
 
 	public void setPrice(float price) {
-		this.price = price;
+		
+		DecimalFormat df = new DecimalFormat();
+		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+		dfs.setDecimalSeparator('.');
+		df.setDecimalFormatSymbols(dfs);
+		df.setMaximumFractionDigits(2);
+		
+		this.price = Float.valueOf(df.format(price));	
 	}
 
 	

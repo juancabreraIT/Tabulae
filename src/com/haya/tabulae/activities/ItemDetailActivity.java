@@ -1,7 +1,5 @@
 package com.haya.tabulae.activities;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -141,12 +139,7 @@ public class ItemDetailActivity extends Activity {
 		Price price = new Select().from(Price.class).where("market = ? AND item = ?", selectedMarket.getId(), idItem).executeSingle();
 
 		if ( price != null ) {
-			DecimalFormat df = new DecimalFormat();
-			df.setMaximumFractionDigits(2);
-			DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-			dfs.setDecimalSeparator('.');
-			df.setDecimalFormatSymbols(dfs);
-			newPrice = df.format(price.getPrice());
+			newPrice = String.valueOf(price.getPrice());
 		} 	
 
 		textPrice.setText(newPrice);

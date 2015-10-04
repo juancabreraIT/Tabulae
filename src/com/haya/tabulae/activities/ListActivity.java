@@ -1,7 +1,5 @@
 package com.haya.tabulae.activities;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -253,15 +251,8 @@ public class ListActivity extends Activity implements OnItemClickListener {
 					totalPrice += price.getPrice();
 				}
 			}
-		}
-		
-		DecimalFormat df = new DecimalFormat();
-		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
-		dfs.setDecimalSeparator('.');
-		df.setDecimalFormatSymbols(dfs);
-		df.setMaximumFractionDigits(2);
-		
-		price.setText(df.format(totalPrice) + "€");
+		}		
+		price.setText(totalPrice + "€");
 	}
 	
 	public void checkItem(View v) {
