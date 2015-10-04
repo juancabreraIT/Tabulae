@@ -55,8 +55,25 @@ public class Item extends Model {
 		this.category = category;
 	}
 	
+	public boolean isSimilar(Item item) {
+		return ( name.equals(item.getName()) && 
+				notes.equals(item.getNotes()) );
+	}
+	
 	@Override
 	public String toString() {
 		return getName();
 	}
+
+	@Override
+	public boolean equals(Object object) {
+
+		if ( object instanceof Item ) {
+			Item newItem = (Item) object;
+			return getId().equals(newItem.getId());
+		}
+
+		return false;
+	}
+
 }

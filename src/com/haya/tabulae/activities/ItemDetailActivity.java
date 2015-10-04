@@ -3,6 +3,7 @@ package com.haya.tabulae.activities;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -35,7 +36,9 @@ public class ItemDetailActivity extends Activity {
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
 
-	private Market selectedMarket;
+	private Market selectedMarket;	
+	
+	private HashMap<Long, Float> tempPrices = new HashMap<Long, Float>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +59,9 @@ public class ItemDetailActivity extends Activity {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 
-				selectedMarket = (Market) marketSpinner.getSelectedItem();
+				selectedMarket = (Market) marketSpinner.getSelectedItem();				
 				populatePrice();
+				storeTempPrice();
 			}
 
 			@Override
@@ -86,21 +90,20 @@ public class ItemDetailActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
-	
+
 	private void init() {
 
 		idItem = getIntent().getExtras().getLong("idItem");
 		item = new Select().from(Item.class).where("id = ?", idItem).executeSingle();
-		
 
 		if ( item == null ) {
 			Toast.makeText(this, "Ups.. something went wrong :_(", Toast.LENGTH_LONG).show();
 			finish();
 			return;
 		}
-						
+
 		markets = new Select().from(Market.class).execute();
-				
+
 		populateNameNotes();
 		populateMarkets();
 		selectedMarket = (Market) marketSpinner.getSelectedItem();
@@ -115,7 +118,7 @@ public class ItemDetailActivity extends Activity {
 			editNotas.setText(item.getNotes());
 		}		
 	}
-	
+
 	private void populateMarkets() {
 		
 		if ( markets.isEmpty() ) {
@@ -131,7 +134,7 @@ public class ItemDetailActivity extends Activity {
 			marketSpinner.setAdapter(adapterSpinner);			
 		}		
 	}
-		
+
 	private void populatePrice() {
 
 		String newPrice = "";
@@ -148,13 +151,51 @@ public class ItemDetailActivity extends Activity {
 
 		textPrice.setText(newPrice);
 	}
+
+	private void storeTempPrice() {
+		
+		String tempPrice = textPrice.getText().toString();
+		if ( tempPrice != null && !tempPrice.isEmpty() ) {
+			tempPrices.put(selectedMarket.getId(), Float.valueOf(tempPrice));	
+		}
+	}
 	
 	private void saveItem() {
+
+		Item newItem = new Item(editName.getText().toString());
+		newItem.setNotes(editNotas.getText().toString());
 		
-		/* 
-		 * TO DO
-		 */
+		if ( !item.isSimilar(newItem) ) {
+			item.setName(newItem.getName());
+			item.setNotes(newItem.getNotes());
+			item.save();
+		}
+
+		savePrices();
+
 		finish();
+	}
+	
+	private void savePrices() {
+		
+		storeTempPrice();		
+				
+		for(Market market : markets) {
+			Float tempPrice = tempPrices.get(market.getId());
+			if ( null == tempPrice ) {
+				continue;
+			}
+			Price newPrice = new Price(item, selectedMarket, tempPrice);
+			Price storedPrice = new Select().from(Price.class).where("market = ? AND item = ?", market.getId(), item.getId()).executeSingle();
+			
+			if ( storedPrice == null ) {
+				newPrice.save();
+			} else if ( ((storedPrice.getPrice() - tempPrice) >= 0.01f) ||
+					((storedPrice.getPrice() - tempPrice) <= -0.01f) ) {
+				storedPrice.setPrice(tempPrice);
+				storedPrice.save();
+			}			
+		}
 	}
 
 }
