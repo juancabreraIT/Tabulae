@@ -2,7 +2,6 @@ package com.haya.tabulae.activities;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +10,7 @@ import android.widget.Toast;
 
 import com.haya.tabulae.R;
 import com.haya.tabulae.models.Market;
+import com.haya.tabulae.utils.Utils;
 
 public class NewMarketActivity extends Activity {
 
@@ -22,7 +22,7 @@ public class NewMarketActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_market);
 		getActionBar().setTitle("New Market");
-		setBackground(android.R.color.holo_purple);
+		Utils.setBackground(this, android.R.color.holo_purple);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setLogo(R.drawable.ic_arrow_back);
 		
@@ -80,16 +80,4 @@ public class NewMarketActivity extends Activity {
 		setResult(Activity.RESULT_OK, resultIntent);
 	}
 
-	@SuppressWarnings("deprecation")
-	private void setBackground(int background) {
-		
-		Drawable draw;
-        if(android.os.Build.VERSION.SDK_INT >= 21){
-        	draw = this.getResources().getDrawable(background, this.getTheme());
-        	this.getActionBar().setBackgroundDrawable(draw);
-        } else {
-        	draw = this.getResources().getDrawable(background);
-        	this.getActionBar().setBackgroundDrawable(draw);
-        }
-	}
 }

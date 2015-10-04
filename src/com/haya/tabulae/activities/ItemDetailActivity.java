@@ -4,15 +4,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.activeandroid.query.Select;
@@ -20,6 +17,7 @@ import com.haya.tabulae.R;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.Market;
 import com.haya.tabulae.models.Price;
+import com.haya.tabulae.utils.Utils;
 
 public class ItemDetailActivity extends Activity {
 
@@ -40,7 +38,7 @@ public class ItemDetailActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item_detail);
 		getActionBar().setTitle("Details");
-		setBackground(android.R.color.holo_purple);
+		Utils.setBackground(this, android.R.color.holo_purple);
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setLogo(R.drawable.ic_arrow_back);
 
@@ -127,17 +125,17 @@ public class ItemDetailActivity extends Activity {
 		finish();
 	}
 
-	@SuppressWarnings("deprecation")
-	private void setBackground(int background) {
-		
-		Drawable draw;
-        if(android.os.Build.VERSION.SDK_INT >= 21){
-        	draw = this.getResources().getDrawable(background, this.getTheme());
-        	this.getActionBar().setBackgroundDrawable(draw);
-        } else {
-        	draw = this.getResources().getDrawable(background);
-        	this.getActionBar().setBackgroundDrawable(draw);
-        }
-	}
+//	@SuppressWarnings("deprecation")
+//	private void setBackground(int background) {
+//		
+//		Drawable draw;
+//        if(android.os.Build.VERSION.SDK_INT >= 21){
+//        	draw = this.getResources().getDrawable(background, this.getTheme());
+//        	this.getActionBar().setBackgroundDrawable(draw);
+//        } else {
+//        	draw = this.getResources().getDrawable(background);
+//        	this.getActionBar().setBackgroundDrawable(draw);
+//        }
+//	}
 
 }

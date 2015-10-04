@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -31,6 +30,7 @@ import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.ListedItem;
 import com.haya.tabulae.models.Market;
 import com.haya.tabulae.models.Price;
+import com.haya.tabulae.utils.Utils;
 
 public class ListActivity extends Activity {
 
@@ -56,7 +56,7 @@ public class ListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_list);
-		setBackground(android.R.color.holo_purple);
+		Utils.setBackground(this, android.R.color.holo_purple);
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
@@ -149,7 +149,7 @@ public class ListActivity extends Activity {
 		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems, marketSpinner);
 		listView.setAdapter(adapterListedItems);		
 	}
-	
+
 	private void loadMarkets() {
 		
 		markets = new Select().from(Market.class).execute();
@@ -178,7 +178,7 @@ public class ListActivity extends Activity {
 			marketSpinner.setAdapter(adapterSpinner);
 		}
 	}
-	
+
 	private void addItemDialog() {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -220,7 +220,7 @@ public class ListActivity extends Activity {
 		dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 		dialog.show();
 	}
-	
+
 	private void addItem(String itemName) {
 
 		Item item = new Select().from(Item.class).where("name = ?", itemName).executeSingle();
@@ -278,19 +278,19 @@ public class ListActivity extends Activity {
 		startActivityForResult(intent, NEW_MARKET_RESULT);
 	}
 		
-	@SuppressWarnings("deprecation")
-	private void setBackground(int background) {
-		
-		Drawable draw;
-        if(android.os.Build.VERSION.SDK_INT >= 21){
-        	draw = this.getResources().getDrawable(background, this.getTheme());
-        	this.getActionBar().setBackgroundDrawable(draw);
-        } else {
-        	draw = this.getResources().getDrawable(background);
-        	this.getActionBar().setBackgroundDrawable(draw);
-        }
-	}
-	
+//	@SuppressWarnings("deprecation")
+//	private void setBackground(int background) {
+//		
+//		Drawable draw;
+//        if(android.os.Build.VERSION.SDK_INT >= 21){
+//        	draw = this.getResources().getDrawable(background, this.getTheme());
+//        	this.getActionBar().setBackgroundDrawable(draw);
+//        } else {
+//        	draw = this.getResources().getDrawable(background);
+//        	this.getActionBar().setBackgroundDrawable(draw);
+//        }
+//	}
+//	
 	
 
 	
