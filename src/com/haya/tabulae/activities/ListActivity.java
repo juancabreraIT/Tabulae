@@ -73,12 +73,12 @@ public class ListActivity extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 
-		Intent intent = new Intent(getApplicationContext(), ItemDetailActivity.class);
-		long idItem = listedItems.get(position).getId();
+		Intent intent = new Intent(this, ItemDetailActivity.class);
+		long idItem = listedItems.get(position).getItem().getId();
 		intent.putExtra("idItem", idItem);
 	
-		Log.d("Tabulae", "Item id: " + idItem);
-		startActivityForResult(intent, ITEM_DETAIL);			
+		Log.d("Tabulae", "[ListActivity] selected idItem: " + idItem);
+		startActivityForResult(intent, ITEM_DETAIL);
 	}
 	
 	@Override
