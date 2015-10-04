@@ -1,6 +1,7 @@
 package com.haya.tabulae.activities;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -139,6 +140,9 @@ public class ItemDetailActivity extends Activity {
 		if ( price != null ) {
 			DecimalFormat df = new DecimalFormat();
 			df.setMaximumFractionDigits(2);
+			DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+			dfs.setDecimalSeparator('.');
+			df.setDecimalFormatSymbols(dfs);
 			newPrice = df.format(price.getPrice());
 		} 	
 
