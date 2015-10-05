@@ -43,7 +43,7 @@ import com.haya.tabulae.utils.Utils;
 public class ListActivity extends Activity implements OnItemClickListener {
 
 	// MOCK DRAWER
-	private String[] mPlanetTitles = {"Earth", "Mars", "Mercury", "Jupiter", "Saturn"};
+	private String[] mPlanetTitles = {"All items", "Settings", "About"};
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 	
@@ -105,6 +105,8 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		if (id == R.id.action_add) {
 			addItemDialog();
 			return true;
+		} else if ( id == R.id.action_settings) {
+			Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
 		}
 		return super.onOptionsItemSelected(item);
 	}
