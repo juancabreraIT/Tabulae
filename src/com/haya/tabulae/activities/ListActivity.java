@@ -256,10 +256,10 @@ public class ListActivity extends Activity implements OnItemClickListener {
 			markets.add(market);
 			market.save();
 
-			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
 		} else {
-			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
 		}
 	}
@@ -426,7 +426,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 				price.save();				
 			}
 
-			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
+			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
 		}
 	}
