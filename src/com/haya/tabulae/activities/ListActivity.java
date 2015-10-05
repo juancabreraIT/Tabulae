@@ -3,11 +3,22 @@ package com.haya.tabulae.activities;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.activeandroid.query.Select;
+import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.ListedItemAdapter;
+import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
+import com.haya.tabulae.utils.Utils;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ActionMode;
@@ -29,17 +40,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
-import com.haya.tabulae.R;
-import com.haya.tabulae.adapters.ListedItemAdapter;
-import com.haya.tabulae.models.Item;
-import com.haya.tabulae.models.ListedItem;
-import com.haya.tabulae.models.Market;
-import com.haya.tabulae.models.Price;
-import com.haya.tabulae.utils.Utils;
-
 public class ListActivity extends Activity implements OnItemClickListener {
 
+	// MOCK DRAWER
+	private String[] mPlanetTitles = {"Earth", "Mars", "Mercury", "Jupiter", "Saturn"};
+    private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+	
+	
 	@SuppressWarnings("unused")
 	private ActionMode actionMode;
 	
@@ -406,6 +414,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 	
 	private void mock() {
 
+		loadDrawer();
 		loadItems();		
 		loadMarkets();
 		loadPrices();
@@ -413,6 +422,26 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		recalculatePrice();
 	}
 	
+	@SuppressLint("NewApi")
+	private void loadDrawer() {
+		
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        // Set the adapter for the list view
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mPlanetTitles));
+        // Set the list's click listener
+        mDrawerList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				
+				Toast.makeText(getApplicationContext(), mPlanetTitles[position] + " pushed", Toast.LENGTH_LONG).show();
+			}
+        	
+        });
+	}
 	
 	private void loadPrices() {
 		
