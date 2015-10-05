@@ -7,6 +7,9 @@
     <string name="action_save">Save</string>
     <string name="newItem">New item</string>
     <string name="newMarket">New Market</string>
+    <string name="deleteItem">Delete</string>
+    <string name="item">Item</string>
+    <string name="items">Items</string>
     <string name="dialog_ok">Ok</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="totalPrice">Total price:</string>

@@ -1,6 +1,7 @@
 package com.haya.tabulae.activities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -160,7 +161,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 
                 case R.id.item_delete:
 //                    deleteCategoryDialog(numSelected, mode);
-                	Toast.makeText(getApplicationContext(), "Deleting item...", Toast.LENGTH_SHORT).show();
+                	deleteItemsDialog(numSelected, mode);
                     numSelected = 0;
                     break;
 
@@ -353,6 +354,50 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		startActivityForResult(intent, NEW_MARKET_RESULT);
 	}
 		
+	private void deleteItemsDialog(int numItems, final ActionMode mode) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog dialog;
+		String title = getText(R.string.deleteItem).toString() + " " + numItems + " ";
+		title += numItems > 1 ? getResources().getText(R.string.items) : getResources().getText(R.string.item); 
+		builder.setTitle(title);
+
+		// OK
+		builder.setPositiveButton(getResources().getText(R.string.dialog_ok), new DialogInterface.OnClickListener() { 
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		    	deleteItem(mode);
+		    }
+		});
+		
+		// CANCEL
+		builder.setNegativeButton(getResources().getText(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        dialog.cancel();
+		    }
+		});
+
+		dialog = builder.create();
+		dialog.show();		
+	}
+	
+	private void deleteItem(ActionMode mode) {
+				
+		Iterator<Integer> it = adapterListedItems.getCurrentCheckedPosition().iterator();
+        ArrayList<ListedItem> deletedItems = new ArrayList<ListedItem>();
+        
+        while ( it.hasNext() ) {
+        	int index = it.next().intValue();
+        	ListedItem temp = listedItems.get(index);
+        	deletedItems.add(temp);
+        	temp.delete();
+        }
+        
+        listedItems.removeAll(deletedItems);
+        adapterListedItems.clearSelection();
+        mode.finish();        
+	}
+	
 	private void mock() {
 
 		loadItems();		
