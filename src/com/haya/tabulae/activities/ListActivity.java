@@ -3,20 +3,11 @@ package com.haya.tabulae.activities;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.activeandroid.query.Select;
-import com.haya.tabulae.R;
-import com.haya.tabulae.adapters.ListedItemAdapter;
-import com.haya.tabulae.models.Item;
-import com.haya.tabulae.models.ListedItem;
-import com.haya.tabulae.models.Market;
-import com.haya.tabulae.models.Price;
-import com.haya.tabulae.utils.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
@@ -39,6 +30,15 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.activeandroid.query.Select;
+import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.ListedItemAdapter;
+import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
+import com.haya.tabulae.utils.Utils;
 
 public class ListActivity extends Activity implements OnItemClickListener {
 
@@ -213,6 +213,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 			@Override
 			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 				adapterListedItems.notifyDataSetChanged();
+				recalculatePrice();
 			}
 
 			@Override
