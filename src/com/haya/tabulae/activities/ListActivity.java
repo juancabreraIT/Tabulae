@@ -21,6 +21,7 @@ import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
@@ -39,6 +40,7 @@ import com.haya.tabulae.utils.Utils;
 
 public class ListActivity extends Activity implements OnItemClickListener {
 
+	@SuppressWarnings("unused")
 	private ActionMode actionMode;
 	
 	private ListView listView;
@@ -197,6 +199,20 @@ public class ListActivity extends Activity implements OnItemClickListener {
 				return false;
 			}
 		});
+
+		marketSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+				adapterListedItems.notifyDataSetChanged();
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> arg0) {
+
+			}
+
+		});
 	}
 
 	private void loadItems() {
@@ -235,25 +251,14 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		markets = new Select().from(Market.class).execute();
 		
 		if ( markets.isEmpty() ) {
-
-//			Market market = new Market("No markets");
-//			ArrayList<Market> temp = new ArrayList<Market>(); 
-//			temp.add(market);
-		
-//			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, temp);
-//			marketSpinner.setAdapter(adapterSpinner);
-			
+	
 			Market market = new Market("Mercadona");
 			markets.add(market);
 			market.save();
-//						
-//			market = new Market("Aldi");
-//			markets.add(market);
-//			market.save();
+
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
 		} else {
-
 			adapterSpinner = new ArrayAdapter<Market>(this, android.R.layout.simple_spinner_dropdown_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
 		}
@@ -278,7 +283,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		builder.setView(autoText);
 
 		// OK
-		builder.setPositiveButton(getResources().getText(R.string.dialog_ok), new DialogInterface.OnClickListener() { 
+		builder.setPositiveButton(getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() { 
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
 		    	String itemName = autoText.getText().toString().trim();
@@ -289,7 +294,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		});
 		
 		// CANCEL
-		builder.setNegativeButton(getResources().getText(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(getResources().getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
 		        dialog.cancel();
@@ -362,7 +367,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		builder.setTitle(title);
 
 		// OK
-		builder.setPositiveButton(getResources().getText(R.string.dialog_ok), new DialogInterface.OnClickListener() { 
+		builder.setPositiveButton(getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() { 
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
 		    	deleteItem(mode);
@@ -370,7 +375,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		});
 		
 		// CANCEL
-		builder.setNegativeButton(getResources().getText(R.string.dialog_cancel), new DialogInterface.OnClickListener() {
+		builder.setNegativeButton(getResources().getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
 		    @Override
 		    public void onClick(DialogInterface dialog, int which) {
 		        dialog.cancel();
@@ -398,6 +403,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
         mode.finish();        
 	}
 	
+	
 	private void mock() {
 
 		loadItems();		
@@ -406,6 +412,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		
 		recalculatePrice();
 	}
+	
 	
 	private void loadPrices() {
 		

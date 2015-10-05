@@ -3,7 +3,7 @@ package com.haya.tabulae.adapters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
@@ -32,11 +32,7 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 		super(context, resource, textViewResourceId, objects);
 		this.context = context;
 		this.spinner = spinner;
-	}
-	
-	
-	
-	
+	}	
 	
     public void setNewSelection(int position, boolean value) {
         mSelection.put(position, value);
@@ -60,13 +56,9 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
     public void clearSelection() {
         mSelection = new HashMap<Integer, Boolean>();
         notifyDataSetChanged();
-    }    
-
-
+    }    		
 	
-	
-	
-	
+	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -106,8 +98,9 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 
 		return v;
 	}
-	
+		
 	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
 	private void setBackground(View v, int background) {
 		
 		Drawable draw;
