@@ -447,6 +447,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
         
         listedItems.removeAll(deletedItems);
         adapterListedItems.clearSelection();
+        recalculatePrice();
         mode.finish();        
 	}
 	
