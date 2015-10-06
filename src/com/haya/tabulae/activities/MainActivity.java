@@ -391,6 +391,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			listedItem.save();
 			adapterListedItems.notifyDataSetChanged();
 		}
+		recalculatePrice();
 	}
 	
 	private void startItemDetail(int position) {
