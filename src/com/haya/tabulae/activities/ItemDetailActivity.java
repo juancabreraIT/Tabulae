@@ -3,7 +3,15 @@ package com.haya.tabulae.activities;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.activeandroid.query.Select;
+import com.haya.tabulae.R;
+import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
+import com.haya.tabulae.utils.Utils;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,14 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
-import com.haya.tabulae.R;
-import com.haya.tabulae.models.Item;
-import com.haya.tabulae.models.Market;
-import com.haya.tabulae.models.Price;
-import com.haya.tabulae.utils.Utils;
-
-public class ItemDetailActivity extends Activity {
+public class ItemDetailActivity extends Activity implements OnItemSelectedListener {
 
 	private long idItem;
 	private Item item;
@@ -52,21 +53,7 @@ public class ItemDetailActivity extends Activity {
 		marketSpinner = (Spinner) findViewById(R.id.spinnerMarket);		
 		textPrice = (EditText) findViewById(R.id.textPrice);
 
-		marketSpinner.setOnItemSelectedListener(new OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-
-				selectedMarket = (Market) marketSpinner.getSelectedItem();				
-				populatePrice();
-				storeTempPrice();
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> arg0) {
-
-			}
-		});
+		marketSpinner.setOnItemSelectedListener(this);
 		
 		init();
 	}
@@ -80,15 +67,30 @@ public class ItemDetailActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_save) {
-			saveItem();
-		} else if ( id == android.R.id.home) {
-			finish();
-		}
+		
+		switch(id) {
+			case R.id.action_save:
+				saveItem();
+				break;
+			case android.R.id.home:
+				finish();
+				break;
+		}	
 		return super.onOptionsItemSelected(item);
 	}
 
+	@Override
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
+		selectedMarket = (Market) marketSpinner.getSelectedItem();				
+		populatePrice();
+		storeTempPrice();
+	}
+
+	@Override
+	public void onNothingSelected(AdapterView<?> parent) {	}
+	
+	
 	private void init() {
 
 		idItem = getIntent().getExtras().getLong("idItem");
@@ -101,7 +103,6 @@ public class ItemDetailActivity extends Activity {
 		}
 
 		markets = new Select().from(Market.class).execute();
-
 		populateNameNotes();
 		populateMarkets();
 		selectedMarket = (Market) marketSpinner.getSelectedItem();
@@ -166,6 +167,7 @@ public class ItemDetailActivity extends Activity {
 
 		savePrices();
 
+		sendResponse();
 		finish();
 	}
 	
@@ -191,4 +193,11 @@ public class ItemDetailActivity extends Activity {
 		}
 	}
 
+	private void sendResponse() {
+		Intent resultIntent = new Intent();
+		setResult(Activity.RESULT_OK, resultIntent);
+	}
+
+	
+	
 }

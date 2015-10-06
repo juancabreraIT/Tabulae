@@ -3,6 +3,15 @@ package com.haya.tabulae.activities;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.activeandroid.query.Select;
+import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.ListedItemAdapter;
+import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
+import com.haya.tabulae.utils.Utils;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -31,23 +40,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.activeandroid.query.Select;
-import com.haya.tabulae.R;
-import com.haya.tabulae.adapters.ListedItemAdapter;
-import com.haya.tabulae.models.Item;
-import com.haya.tabulae.models.ListedItem;
-import com.haya.tabulae.models.Market;
-import com.haya.tabulae.models.Price;
-import com.haya.tabulae.utils.Utils;
-
 public class ListActivity extends Activity implements OnItemClickListener {
 
-	// MOCK DRAWER
+	// Mock
+	final static String DEFAULT_LIST = "My quick list";
 	private String[] mPlanetTitles = {"All items", "Settings", "About"};
-    private DrawerLayout mDrawerLayout;
+
+	@SuppressWarnings("unused")
+	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-	
-	
+		
 	@SuppressWarnings("unused")
 	private ActionMode actionMode;
 	
@@ -64,10 +66,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 	private ArrayAdapter<Market> adapterSpinner;
 
 	private final int NEW_MARKET_RESULT = 100;
-	private final int ITEM_DETAIL = 101;
-
-	// Mock
-	final static String DEFAULT_LIST = "My quick list";	
+	private final int ITEM_DETAIL = 101;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -78,12 +77,11 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 		
 		init();
-		mock();
+		loadData();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.list, menu);
 		return true;
 	}
@@ -95,19 +93,21 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		long idItem = listedItems.get(position).getItem().getId();
 		intent.putExtra("idItem", idItem);
 	
-		Log.d("Tabulae", "[ListActivity] selected idItem: " + idItem);
 		startActivityForResult(intent, ITEM_DETAIL);
 	}
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_add) {
-			addItemDialog();
-			return true;
-		} else if ( id == R.id.action_settings) {
-			Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
-		}
+		switch(id) { 
+			case R.id.action_add:
+				addItemDialog();
+				return true;			
+			
+			case R.id.action_settings:
+				Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+				break;
+		}		
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -123,19 +123,19 @@ public class ListActivity extends Activity implements OnItemClickListener {
 			      break;
 			case (ITEM_DETAIL) :
 				if (resultCode == Activity.RESULT_OK) {
-					
+					recalculatePrice();
 				}
 		}
 	}
 
+	
 	private void init() {
 
 		listView = (ListView) findViewById(android.R.id.list);
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 
-		listView.setOnItemClickListener(this);
-		
+		listView.setOnItemClickListener(this);		
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		
 		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
@@ -172,13 +172,11 @@ public class ListActivity extends Activity implements OnItemClickListener {
             	switch (item.getItemId()) {
 
                 case R.id.item_delete:
-//                    deleteCategoryDialog(numSelected, mode);
                 	deleteItemsDialog(numSelected, mode);
                     numSelected = 0;
                     break;
 
                 case R.id.item_edit:
-//                	editCategoryDialog();
                 	Toast.makeText(getApplicationContext(), "Editing item...", Toast.LENGTH_SHORT).show();
                 	mode.finish();
                 	break;
@@ -225,14 +223,39 @@ public class ListActivity extends Activity implements OnItemClickListener {
 
 		});
 	}
+	
+	// Populate View
+	private void loadData() {
+		loadDrawer();
+		loadItems();		
+		loadMarkets();
+		loadPrices();
+		recalculatePrice();
+	}	
 
+	@SuppressLint("NewApi")
+	private void loadDrawer() {
+		
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mPlanetTitles));
+
+        mDrawerList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Toast.makeText(getApplicationContext(), mPlanetTitles[position] + " pushed", Toast.LENGTH_LONG).show();
+			}        	
+        });
+	}		
+	
 	private void loadItems() {
 		
 		listedItems = new Select().from(ListedItem.class).execute();
 		
 		if ( listedItems.isEmpty() ) {
 			Log.d("Tabulae", "Loading data base 1st time.");
-			// LISTVIEW
 			Item item = new Item("Tomate");			
 			ListedItem temp = new ListedItem(DEFAULT_LIST, item);
 			listedItems.add(temp);
@@ -275,6 +298,42 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		}
 	}
 
+	private void loadPrices() {
+		
+		ArrayList<Price> prices = new Select().from(Price.class).execute();
+		
+		if ( prices.isEmpty() ) {
+			
+			for(ListedItem listedItem : listedItems) {
+				Market market = (Market) marketSpinner.getSelectedItem();
+				Price price = new Price(listedItem.getItem(), market, (float) Math.random() * 15);
+				price.save();				
+			}
+
+			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
+			marketSpinner.setAdapter(adapterSpinner);
+		}
+	}
+	
+	private void recalculatePrice() {
+		
+		float totalPrice = 0.0f;
+		Market selectedMarket = (Market) marketSpinner.getSelectedItem();
+		ArrayList<Price> itemPrices;
+				
+		for(ListedItem listedItem : listedItems) {
+			itemPrices = (ArrayList<Price>) listedItem.getItem().prices();
+			
+			for(Price price : itemPrices) {
+				if ( price.getMarket().equals(selectedMarket) ) {
+					totalPrice += price.getPrice();
+				}
+			}
+		}		
+		price.setText(totalPrice + "€");
+	}	
+	
+	// Item
 	private void addItemDialog() {
 		
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -334,42 +393,10 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		recalculatePrice();
 	}
 	
-	private void recalculatePrice() {
-		
-		float totalPrice = 0.0f;
-		Market selectedMarket = (Market) marketSpinner.getSelectedItem();
-		ArrayList<Price> itemPrices;
-				
-		for(ListedItem listedItem : listedItems) {
-			itemPrices = (ArrayList<Price>) listedItem.getItem().prices();
-			
-			for(Price price : itemPrices) {
-				if ( price.getMarket().equals(selectedMarket) ) {
-					totalPrice += price.getPrice();
-				}
-			}
-		}		
-		price.setText(totalPrice + "€");
-	}
-	
-	public void checkItem(View v) {
-		
-//		CheckBox checkB = (CheckBox) v;
-//		checkB.setChecked(false);	
-//		int pos = (Integer) v.getTag();
-//		listedItems.get(pos).delete();
-//		listedItems.remove(pos);	
-		
-		// add to boughtItems or something like that
+	public void checkItem(View v) {		
 		adapterListedItems.notifyDataSetChanged();
 	}
 
-	public void addMarket(View v) {
-		
-		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
-		startActivityForResult(intent, NEW_MARKET_RESULT);
-	}
-		
 	private void deleteItemsDialog(int numItems, final ActionMode mode) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog dialog;
@@ -414,54 +441,11 @@ public class ListActivity extends Activity implements OnItemClickListener {
         mode.finish();        
 	}
 	
-	
-	private void mock() {
-
-		loadDrawer();
-		loadItems();		
-		loadMarkets();
-		loadPrices();
+	// Market
+	public void addMarket(View v) {
 		
-		recalculatePrice();
+		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
+		startActivityForResult(intent, NEW_MARKET_RESULT);
 	}
-	
-	@SuppressLint("NewApi")
-	private void loadDrawer() {
 		
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-        // Set the adapter for the list view
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mPlanetTitles));
-        // Set the list's click listener
-        mDrawerList.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				
-				Toast.makeText(getApplicationContext(), mPlanetTitles[position] + " pushed", Toast.LENGTH_LONG).show();
-			}
-        	
-        });
-	}
-	
-	private void loadPrices() {
-		
-		ArrayList<Price> prices = new Select().from(Price.class).execute();
-		
-		if ( prices.isEmpty() ) {
-			
-			for(ListedItem listedItem : listedItems) {
-				Market market = (Market) marketSpinner.getSelectedItem();
-				Price price = new Price(listedItem.getItem(), market, (float) Math.random() * 15);
-				price.save();				
-			}
-
-			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
-			marketSpinner.setAdapter(adapterSpinner);
-		}
-	}
-
-	
 }

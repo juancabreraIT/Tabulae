@@ -26,7 +26,8 @@ public class NewMarketActivity extends Activity {
 		getActionBar().setHomeButtonEnabled(true);
 		getActionBar().setLogo(R.drawable.ic_arrow_back);
 		
-		init();
+		marketName = (EditText) findViewById(R.id.editMarketName);
+		marketNotes = (EditText) findViewById(R.id.editMarketNotes);
 	}
 
 	@Override
@@ -38,19 +39,16 @@ public class NewMarketActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
-		if (id == R.id.action_save) {
-			saveMarket();
-		} else if ( id == android.R.id.home) {
-			finish();
+		switch(id) {
+			case R.id.action_save:
+				saveMarket();
+				break;
+			
+			case android.R.id.home:
+				finish();
+				break;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-	
-	private void init() {
-		
-		marketName = (EditText) findViewById(R.id.editMarketName);
-		marketNotes = (EditText) findViewById(R.id.editMarketNotes);
-		
 	}
 
 	private void saveMarket() {
@@ -67,7 +65,7 @@ public class NewMarketActivity extends Activity {
 		
 		if ( !notes.isEmpty() ) {
 			market.setNotes(notes);
-		}
+		}		
 		
 		market.save();
 		
