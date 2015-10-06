@@ -18,6 +18,9 @@ public class Item extends Model {
 	@Column(name = "category")
 	private Category category;
 	
+	@Column(name = "picked")
+	private int picked;
+	
 	public List<Price> prices() {
 		return getMany(Price.class, "item");
 	}
@@ -27,8 +30,9 @@ public class Item extends Model {
 	}
 	
 	public Item(String name) {
-		this.name = name;
+		this.name = name;		
 		this.notes = "";
+		picked = 0;
 	}	
 	
 	public String getName() {
@@ -53,6 +57,18 @@ public class Item extends Model {
 
 	public void setCategory(Category category) {
 		this.category = category;
+	}
+		
+	public int getPicked() {
+		return picked;
+	}
+
+	public void setPicked(int picked) {
+		this.picked = picked;
+	}
+
+	public void risePicks() {
+		picked += 1;
 	}
 	
 	public boolean isSimilar(Item item) {
