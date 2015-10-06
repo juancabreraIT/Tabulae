@@ -139,7 +139,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			
 			@Override
 			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-				MenuItem item = menu.findItem(R.id.item_edit);
+				MenuItem item = menu.findItem(R.id.item_select_all);
 	            if (numSelected == 1) {        	       
 	            	item.setVisible(true);	        	   
 	        	} else {
@@ -171,9 +171,11 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
                     numSelected = 0;
                     break;
 
-                case R.id.item_edit:
-                	Toast.makeText(getApplicationContext(), "Editing item...", Toast.LENGTH_SHORT).show();
-                	mode.finish();
+                case R.id.item_select_all:
+                	Toast.makeText(getApplicationContext(), "Select all...", Toast.LENGTH_SHORT).show();
+                	numSelected = listedItems.size();
+                	adapterListedItems.selectAll(numSelected);
+                	mode.setTitle(numSelected + " selected");
                 	break;
             }                
             return false;

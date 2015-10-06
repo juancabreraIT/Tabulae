@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
      
     <item
-        android:id="@+id/item_edit"
-        android:icon="@android:drawable/ic_menu_edit"
+        android:id="@+id/item_select_all"
+        android:icon="@drawable/ic_select_all_white_36dp"
         android:showAsAction="ifRoom|withText"
-        android:title="Edit"
-        android:titleCondensed="Edit">
+        android:title="Select All"
+        android:titleCondensed="Select All">
     </item>
     
     <item

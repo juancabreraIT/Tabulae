@@ -58,6 +58,15 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
         notifyDataSetChanged();
     }    		
 	
+    public void selectAll(int size) {
+    	mSelection = new HashMap<Integer, Boolean>();
+    	
+    	for(int i = 0; i < size; i++) {
+    		mSelection.put(i, true);
+    	}
+    	notifyDataSetChanged();    	
+    }
+    
 	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
