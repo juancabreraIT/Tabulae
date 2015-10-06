@@ -15,6 +15,7 @@ import com.haya.tabulae.utils.Utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -40,7 +41,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity implements OnItemClickListener {
+public class MainActivity extends ListActivity implements OnItemClickListener {
 
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";
@@ -53,7 +54,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	@SuppressWarnings("unused")
 	private ActionMode actionMode;
 	
-	private ListView listView;
 	private Spinner marketSpinner;
 	private TextView price;
 
@@ -127,14 +127,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	
 	private void init() {
 
-		listView = (ListView) findViewById(android.R.id.list);
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 
-		listView.setOnItemClickListener(this);		
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		getListView().setOnItemClickListener(this);		
+		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		
-		listView.setMultiChoiceModeListener(new MultiChoiceModeListener() {
+		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			
 			private int numSelected = 0;
 			
@@ -194,12 +193,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			}
 		});
 	
-		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
 
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				
-				listView.setItemChecked(position, !adapterListedItems.isPositionChecked(position));
+				getListView().setItemChecked(position, !adapterListedItems.isPositionChecked(position));
 				return false;
 			}
 		});
@@ -273,7 +272,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			Log.d("Tabulae", "Data base was loaded.");
 		}
 		adapterListedItems = new ListedItemAdapter(this, R.layout.listed_item, R.id.ItemTitle, listedItems, marketSpinner);
-		listView.setAdapter(adapterListedItems);		
+		getListView().setAdapter(adapterListedItems);
+		
 	}
 
 	private void loadMarkets() {
