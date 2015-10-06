@@ -2,6 +2,8 @@ package com.haya.tabulae.activities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
@@ -102,11 +104,11 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			
 			case R.id.action_clear_list:
 				Toast.makeText(this, "Clear list", Toast.LENGTH_SHORT).show();
-				clearList();
+				clearAllItems();
 				break;
 			case R.id.action_clear_checked_items:
 				Toast.makeText(this, "Clear selected items", Toast.LENGTH_SHORT).show();
-				
+				clearCheckedItems();
 				break;
 		}		
 		return super.onOptionsItemSelected(item);
@@ -205,7 +207,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			@Override
 			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				
-				getListView().setItemChecked(position, !adapterListedItems.isPositionChecked(position));
+				getListView().setItemChecked(position, !adapterListedItems.isPositionSelected(position));
 				return false;
 			}
 		});
@@ -410,7 +412,9 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		startActivityForResult(intent, ITEM_DETAIL);
 	}
 	
-	public void checkItem(View v) {		
+	public void checkItem(View v) {
+
+		adapterListedItems.setNewChecked(Integer.valueOf(v.getTag().toString()));
 		adapterListedItems.notifyDataSetChanged();
 	}
 
@@ -443,7 +447,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	
 	private void deleteItem(ActionMode mode) {
 				
-		Iterator<Integer> it = adapterListedItems.getCurrentCheckedPosition().iterator();
+		Iterator<Integer> it = adapterListedItems.getCurrentSelectedPosition().iterator();
         ArrayList<ListedItem> deletedItems = new ArrayList<ListedItem>();
         
         while ( it.hasNext() ) {
@@ -459,14 +463,36 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
         mode.finish();        
 	}
 	
-	private void clearList() {
+	private void clearAllItems() {
 		
 		for(ListedItem listedItem : listedItems) {
 			listedItem.getItem().risePicks();
+			listedItem.getItem().save();
 			listedItem.delete();
 		}
 		
 		listedItems.clear();
+		adapterListedItems.clearChecks();
+		adapterListedItems.notifyDataSetChanged();
+	}
+	
+	private void clearCheckedItems() {
+		
+		ArrayList<Integer> checkedItems = adapterListedItems.getCurrentCheckedPosition();
+		Iterator<Integer> it = checkedItems.iterator();
+		ArrayList<ListedItem> deletedItems = new ArrayList<ListedItem>();				
+		
+		while(it.hasNext()) {
+			int position = it.next();
+			ListedItem listedItem = listedItems.get(position);					
+			listedItem.getItem().risePicks();
+			listedItem.getItem().save();
+			listedItem.delete();
+			deletedItems.add(listedItem);
+		}
+
+		adapterListedItems.clearChecks();
+		listedItems.removeAll(deletedItems);
 		adapterListedItems.notifyDataSetChanged();
 	}
 	

@@ -2,7 +2,14 @@ package com.haya.tabulae.adapters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Set;
+
+import com.haya.tabulae.R;
+import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.models.Price;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Paint;
@@ -15,18 +22,13 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.haya.tabulae.R;
-import com.haya.tabulae.models.ListedItem;
-import com.haya.tabulae.models.Market;
-import com.haya.tabulae.models.Price;
-
 public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 	
 	private Context context;
 	private Spinner spinner;
 	
 	private HashMap<Integer, Boolean> mSelection = new HashMap<Integer, Boolean>();
-	
+	private HashMap<Integer, Boolean> mChecked = new HashMap<Integer, Boolean>();
 	
 	public ListedItemAdapter(Context context, int resource, int textViewResourceId, ArrayList<ListedItem> objects, Spinner spinner) {
 		super(context, resource, textViewResourceId, objects);
@@ -34,17 +36,18 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 		this.spinner = spinner;
 	}	
 	
+	// Selections
     public void setNewSelection(int position, boolean value) {
         mSelection.put(position, value);
         notifyDataSetChanged();
     }
 	
-    public boolean isPositionChecked(int position) {
+    public boolean isPositionSelected(int position) {
         Boolean result = mSelection.get(position);
         return result == null ? false : result;
     }
     
-    public Set<Integer> getCurrentCheckedPosition() {
+    public Set<Integer> getCurrentSelectedPosition() {
         return mSelection.keySet();
     }
     
@@ -67,6 +70,43 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
     	notifyDataSetChanged();    	
     }
     
+    // Checks
+    public void setNewChecked(int position) {
+    	    	
+    	if ( !mChecked.containsKey(position) ) {
+    		mChecked.put(position, true);
+    	} else { 
+    		mChecked.put(position, !mChecked.get(position) );
+    	}
+    }
+    
+    private boolean isPositionChecked(int position) {
+    	Boolean result = mChecked.get(position);
+        return (result == null || result == false) ? false : true;
+    }
+
+    public ArrayList<Integer> getCurrentCheckedPosition() {
+    	
+    	ArrayList<Integer> checkedList = new ArrayList<Integer>();
+    	
+    	Set<Integer> positions = mChecked.keySet();
+    	Iterator<Integer> it = positions.iterator();
+    	
+    	while(it.hasNext()) {
+    		int position = it.next();
+    		if ( mChecked.get(position) ) {
+    			checkedList.add(position);
+    		}
+    	}    	
+    	
+    	return checkedList;
+    }
+
+    public void clearChecks() {
+    	mChecked = new HashMap<Integer, Boolean>();
+    	notifyDataSetChanged();
+    }
+    
 	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
@@ -82,10 +122,12 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 		CheckBox checkBox = (CheckBox) v.findViewById(R.id.Check);
 		checkBox.setTag(position);
 		
-		if ( checkBox.isChecked() ) {
+		if ( isPositionChecked(position) ) {
 			itemName.setPaintFlags( itemName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+			checkBox.setChecked(true);
 		} else {
 			itemName.setPaintFlags(itemName.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
+			checkBox.setChecked(false);
 		}
 		
 		if (mSelection.get(position) != null) {
