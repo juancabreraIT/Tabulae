@@ -60,7 +60,7 @@ public class ItemDetailActivity extends Activity implements OnItemSelectedListen
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.item_detail, menu);
+		getMenuInflater().inflate(R.menu.menu_item, menu);
 		return true;
 	}
 

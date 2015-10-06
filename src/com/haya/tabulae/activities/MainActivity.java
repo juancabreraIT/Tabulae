@@ -40,7 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class ListActivity extends Activity implements OnItemClickListener {
+public class MainActivity extends Activity implements OnItemClickListener {
 
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";
@@ -71,7 +71,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_list);
+		setContentView(R.layout.activity_main);
 		Utils.setBackground(this, android.R.color.holo_purple);
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -82,7 +82,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.list, menu);
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 
@@ -162,7 +162,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 				numSelected = 0;
                 MenuInflater inflater = getMenuInflater();
-                inflater.inflate(R.menu.contextual_menu, menu);
+                inflater.inflate(R.menu.menu_contextual, menu);
                 actionMode = mode;
                 return true;
 			}
@@ -276,7 +276,7 @@ public class ListActivity extends Activity implements OnItemClickListener {
 		} else {
 			Log.d("Tabulae", "Data base was loaded.");
 		}
-		adapterListedItems = new ListedItemAdapter(this, R.layout.list_item, R.id.ItemTitle, listedItems, marketSpinner);
+		adapterListedItems = new ListedItemAdapter(this, R.layout.listed_item, R.id.ItemTitle, listedItems, marketSpinner);
 		listView.setAdapter(adapterListedItems);		
 	}
 
