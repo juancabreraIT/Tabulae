@@ -89,11 +89,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
 
-		Intent intent = new Intent(this, ItemDetailActivity.class);
-		long idItem = listedItems.get(position).getItem().getId();
-		intent.putExtra("idItem", idItem);
-	
-		startActivityForResult(intent, ITEM_DETAIL);
+		startItemDetail(position);
 	}
 	
 	@Override
@@ -379,18 +375,31 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private void addItem(String itemName) {
 
 		Item item = new Select().from(Item.class).where("name = ?", itemName).executeSingle();
-		
+
 		if ( item == null ) {
 			item = new Item(itemName);
 			item.save();
+			
+			ListedItem listedItem = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(listedItem);
+			listedItem.save();
+			
+			startItemDetail(listedItems.size() - 1);
+		} else {
+			ListedItem listedItem = new ListedItem(DEFAULT_LIST, item);
+			listedItems.add(listedItem);
+			listedItem.save();
+			adapterListedItems.notifyDataSetChanged();
 		}
-
-		ListedItem listedItem = new ListedItem(DEFAULT_LIST, item);
-		listedItems.add(listedItem);
-		listedItem.save();
-		adapterListedItems.notifyDataSetChanged();
+	}
+	
+	private void startItemDetail(int position) {
 		
-		recalculatePrice();
+		Intent intent = new Intent(this, ItemDetailActivity.class);
+		long idItem = listedItems.get(position).getItem().getId();
+		intent.putExtra("idItem", idItem);
+	
+		startActivityForResult(intent, ITEM_DETAIL);
 	}
 	
 	public void checkItem(View v) {		
