@@ -45,7 +45,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";
-	private String[] mPlanetTitles = {"All items", "Settings", "About"};
+	private String[] mPlanetTitles = {"My items", "My markets", "Settings", "About"};
 
 	@SuppressWarnings("unused")
 	private DrawerLayout mDrawerLayout;
@@ -100,8 +100,13 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 				addItemDialog();
 				return true;			
 			
-			case R.id.action_settings:
-				Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+			case R.id.action_clear_list:
+				Toast.makeText(this, "Clear list", Toast.LENGTH_SHORT).show();
+				clearList();
+				break;
+			case R.id.action_clear_checked_items:
+				Toast.makeText(this, "Clear selected items", Toast.LENGTH_SHORT).show();
+				
 				break;
 		}		
 		return super.onOptionsItemSelected(item);
@@ -452,6 +457,17 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
         adapterListedItems.clearSelection();
         recalculatePrice();
         mode.finish();        
+	}
+	
+	private void clearList() {
+		
+		for(ListedItem listedItem : listedItems) {
+			listedItem.getItem().risePicks();
+			listedItem.delete();
+		}
+		
+		listedItems.clear();
+		adapterListedItems.notifyDataSetChanged();
 	}
 	
 	// Market

@@ -2,7 +2,8 @@
 <resources>
 
     <string name="app_name">Tabulae</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_clear_list">Clear all items</string>
+    <string name="action_clear_checked_items">Clear checked items</string>
     <string name="action_add">Add</string>
     <string name="action_save">Save</string>
     <string name="newItem">New item</string>
