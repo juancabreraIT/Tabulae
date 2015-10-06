@@ -45,7 +45,8 @@
 	            android:layout_height="match_parent"
 	            android:layout_weight="1"
 	            android:onClick="addMarket"
-	            android:src="@android:drawable/ic_menu_add"
+	            android:src="@android:drawable/ic_input_add"
+	            android:background="@drawable/button_states"
 	            android:text="@string/newMarket" />
 	
 	    </LinearLayout>
