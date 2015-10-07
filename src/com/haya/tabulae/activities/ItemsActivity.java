@@ -25,6 +25,8 @@ public class ItemsActivity extends ListActivity {
 		setContentView(R.layout.activity_items);
 		getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 		Utils.setBackground(this, android.R.color.holo_purple);
+		getActionBar().setHomeButtonEnabled(true);
+		getActionBar().setLogo(R.drawable.ic_arrow_back);
 		
 		populateList();
 	}
@@ -40,9 +42,16 @@ public class ItemsActivity extends ListActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		
+		switch(id) {
+			case R.id.action_settings:
+				
+				break;
+			case android.R.id.home:
+				finish();
+				break;
 		}
+		
 		return super.onOptionsItemSelected(item);
 	}
 	
