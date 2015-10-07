@@ -319,9 +319,17 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
 				
+				switch(position) {
+					case 1:						
+						Intent intent = new Intent(getApplicationContext(), ItemsActivity.class);					
+						startActivity(intent);
+					break;
+					
+					default:
+						Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();					
+				}				
 			}        	
         });
 	}		
