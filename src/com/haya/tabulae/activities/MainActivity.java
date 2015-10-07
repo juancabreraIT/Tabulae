@@ -52,7 +52,8 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	// Mock
 	final static String DEFAULT_LIST = "My quick list";	
 
-	private ActionBarDrawerToggle mDrawerToggle;	
+	private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerItemsAdapter adapterDrawer;
 	
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
@@ -166,6 +167,14 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	    }
 	}
 
+	@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_add).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+	
+	
 	private void init() {
 
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
@@ -287,25 +296,24 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle("Tabulae");
+                getActionBar().setTitle(R.string.app_name);
+                invalidateOptionsMenu();
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
                 getActionBar().setTitle("Select an option");
+                invalidateOptionsMenu();
             }
         };
         
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);
-				
+        getActionBar().setHomeButtonEnabled(true);				
 
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
-//        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_item, R.id.ItemTitle, Utils.drawerList));
-        
-        DrawerItemsAdapter adapterDrawer = new DrawerItemsAdapter(this, R.layout.drawer_item, R.id.drawerItemTitle, Utils.drawerList);
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);      
+        adapterDrawer = new DrawerItemsAdapter(this, R.layout.drawer_item, R.id.drawerItemTitle, Utils.drawerList);
         mDrawerList.setAdapter(adapterDrawer);
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
@@ -313,6 +321,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();
+				
 			}        	
         });
 	}		
