@@ -79,7 +79,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));  
+		getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 		Utils.setBackground(this, android.R.color.holo_purple);
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -156,12 +156,11 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		}
 	}
 
-	@SuppressLint("RtlHardcoded")
 	@Override
 	public void onBackPressed() {
 
-	    if ( mDrawerLayout.isDrawerOpen(Gravity.LEFT) ) {
-	    	mDrawerLayout.closeDrawer(Gravity.LEFT);
+	    if ( mDrawerLayout.isDrawerOpen(Gravity.START) ) {
+	    	mDrawerLayout.closeDrawer(Gravity.START);
 	    } else {
 	        super.onBackPressed();
 	    }
@@ -321,6 +320,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
 				
+				mDrawerLayout.closeDrawer(Gravity.START);
 				switch(position) {
 					case 1:						
 						Intent intent = new Intent(getApplicationContext(), ItemsActivity.class);					
