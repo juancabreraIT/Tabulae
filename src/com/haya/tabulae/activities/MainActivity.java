@@ -18,11 +18,14 @@ import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
 import android.util.Log;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,13 +44,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+@SuppressWarnings("deprecation")
 public class MainActivity extends ListActivity implements OnItemClickListener {
 
 	// Mock
-	final static String DEFAULT_LIST = "My quick list";
-	private String[] mPlanetTitles = {"My items", "My markets", "Settings", "About"};
+	final static String DEFAULT_LIST = "My quick list";	
 
-	@SuppressWarnings("unused")
+	private ActionBarDrawerToggle mDrawerToggle;	
+	
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
 		
@@ -81,6 +85,19 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	}
 	
 	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }	
+	
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
@@ -95,6 +112,11 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
+		
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+	          return true;
+        }
+		
 		switch(id) { 
 			case R.id.action_add:
 				addItemDialog();
@@ -130,6 +152,16 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		}
 	}
 
+	@SuppressLint("RtlHardcoded")
+	@Override
+	public void onBackPressed() {
+
+	    if ( mDrawerLayout.isDrawerOpen(Gravity.LEFT) ) {
+	    	mDrawerLayout.closeDrawer(Gravity.LEFT);
+	    } else {
+	        super.onBackPressed();
+	    }
+	}
 	
 	private void init() {
 
@@ -239,16 +271,43 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	@SuppressLint("NewApi")
 	private void loadDrawer() {
 		
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_menu_white_24dp,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+                ) {
 
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, mPlanetTitles));
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle("Tabulae");
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle("Select an option");
+            }
+        };
+        
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);
+		
+		
+
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);
+        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Utils.drawerList));
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Toast.makeText(getApplicationContext(), mPlanetTitles[position] + " pushed", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();
 			}        	
         });
 	}		

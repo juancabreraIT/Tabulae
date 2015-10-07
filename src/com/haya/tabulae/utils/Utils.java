@@ -1,10 +1,12 @@
 package com.haya.tabulae.utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 
 public final class Utils {
 
+	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static void setBackground(Activity activity, int background) {
 		
@@ -17,4 +19,10 @@ public final class Utils {
         	activity.getActionBar().setBackgroundDrawable(draw);
         }
 	}
+
+	public final static String[] drawerList = {"My items", 
+													"My markets", 
+													"Settings", 
+													"About",
+													"Donate"};
 }
