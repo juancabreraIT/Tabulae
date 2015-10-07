@@ -5,6 +5,7 @@ import java.util.Iterator;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.DrawerItemsAdapter;
 import com.haya.tabulae.adapters.ListedItemAdapter;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.ListedItem;
@@ -85,7 +86,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		init();
 		loadData();
 	}
-	
+
 	@Override
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
@@ -98,7 +99,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
         super.onConfigurationChanged(newConfig);
         mDrawerToggle.onConfigurationChanged(newConfig);
     }	
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -110,7 +111,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 
 		startItemDetail(position);
 	}
-	
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		int id = item.getItemId();
@@ -164,7 +165,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	        super.onBackPressed();
 	    }
 	}
-	
+
 	private void init() {
 
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
@@ -260,7 +261,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 
 		});
 	}
-	
+
 	// Populate View
 	private void loadData() {
 		loadDrawer();
@@ -299,11 +300,13 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         getActionBar().setHomeButtonEnabled(true);
-		
-		
+				
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);
-        mDrawerList.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, Utils.drawerList));
+//        mDrawerList.setAdapter(new ArrayAdapter<String>(this, R.layout.drawer_item, R.id.ItemTitle, Utils.drawerList));
+        
+        DrawerItemsAdapter adapterDrawer = new DrawerItemsAdapter(this, R.layout.drawer_item, R.id.drawerItemTitle, Utils.drawerList);
+        mDrawerList.setAdapter(adapterDrawer);
 
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
