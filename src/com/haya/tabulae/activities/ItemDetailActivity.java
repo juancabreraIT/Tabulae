@@ -9,7 +9,7 @@ import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.Market;
 import com.haya.tabulae.models.Price;
 import com.haya.tabulae.utils.Utils;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+@SuppressLint("UseSparseArrays")
 public class ItemDetailActivity extends Activity implements OnItemSelectedListener {
 
 	private long idItem;
@@ -166,7 +167,6 @@ public class ItemDetailActivity extends Activity implements OnItemSelectedListen
 		}
 
 		savePrices();
-
 		sendResponse();
 		finish();
 	}

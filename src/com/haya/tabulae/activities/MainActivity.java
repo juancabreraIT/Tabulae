@@ -2,8 +2,6 @@ package com.haya.tabulae.activities;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
@@ -127,6 +125,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			case (ITEM_DETAIL) :
 				if (resultCode == Activity.RESULT_OK) {
 					recalculatePrice();
+					adapterListedItems.notifyDataSetChanged();
 				}
 		}
 	}
