@@ -67,7 +67,7 @@ public class Item extends Model {
 		this.picked = picked;
 	}
 
-	public void risePicks() {
+	public void increasePicks() {
 		picked += 1;
 	}
 	

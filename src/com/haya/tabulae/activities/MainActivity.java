@@ -413,7 +413,10 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	
 	public void checkItem(View v) {
 
-		adapterListedItems.setNewChecked(Integer.valueOf(v.getTag().toString()));
+		int position = Integer.valueOf(v.getTag().toString());
+		boolean checked = adapterListedItems.setNewChecked(position);
+		listedItems.get(position).setChecked(checked);
+		listedItems.get(position).save();
 		adapterListedItems.notifyDataSetChanged();
 	}
 
@@ -465,7 +468,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	private void clearAllItems() {
 		
 		for(ListedItem listedItem : listedItems) {
-			listedItem.getItem().risePicks();
+			listedItem.getItem().increasePicks();
 			listedItem.getItem().save();
 			listedItem.delete();
 		}
@@ -484,7 +487,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		while(it.hasNext()) {
 			int position = it.next();
 			ListedItem listedItem = listedItems.get(position);					
-			listedItem.getItem().risePicks();
+			listedItem.getItem().increasePicks();
 			listedItem.getItem().save();
 			listedItem.delete();
 			deletedItems.add(listedItem);

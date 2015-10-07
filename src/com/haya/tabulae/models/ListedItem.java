@@ -13,8 +13,11 @@ public class ListedItem extends Model {
 	@Column(name = "item", notNull = true)
 	private Item item;
 	
-	@Column(name = "amount")
+	@Column(name = "amount", notNull = true)
 	private byte amount;
+	
+	@Column(name = "checked", notNull = true)
+	private boolean checked;
 	
 	public ListedItem() {
 		super();
@@ -23,11 +26,15 @@ public class ListedItem extends Model {
 	public ListedItem(String name, String itemName) {
 		this.list = name;
 		this.item = new Item(itemName);
+		this.amount = 1;
+		this.checked = false;
 	}
 	
 	public ListedItem(String name, Item item) {
 		this.list = name;
 		this.item = item;
+		this.amount = 1;
+		this.checked = false;
 	}
 	
 	public String getListName() {
@@ -54,6 +61,22 @@ public class ListedItem extends Model {
 		this.amount = amount;
 	}
 	
+	public void increaseAmount() {
+		amount += 1;
+	}
+	
+	public void decreaseAmount() {
+		amount -= 1;
+	}
+	
+	public boolean isChecked() {
+		return checked;
+	}
+
+	public void setChecked(boolean checked) {
+		this.checked = checked;
+	}
+
 	@Override
 	public String toString() {
 		return getItem().getName();

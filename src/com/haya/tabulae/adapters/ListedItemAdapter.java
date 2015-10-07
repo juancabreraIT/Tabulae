@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+@SuppressLint("UseSparseArrays")
 public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 	
 	private Context context;
@@ -34,6 +35,10 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
 		super(context, resource, textViewResourceId, objects);
 		this.context = context;
 		this.spinner = spinner;
+		
+		for(int i = 0; i < objects.size(); i++) {
+			mChecked.put(i, objects.get(i).isChecked());
+		}
 	}	
 	
 	// Selections
@@ -71,13 +76,15 @@ public class ListedItemAdapter extends ArrayAdapter<ListedItem> {
     }
     
     // Checks
-    public void setNewChecked(int position) {
+    public boolean setNewChecked(int position) {
     	    	
     	if ( !mChecked.containsKey(position) ) {
     		mChecked.put(position, true);
     	} else { 
     		mChecked.put(position, !mChecked.get(position) );
     	}
+    	
+    	return mChecked.get(position);
     }
     
     private boolean isPositionChecked(int position) {
