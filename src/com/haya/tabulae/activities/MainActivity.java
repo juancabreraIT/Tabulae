@@ -339,6 +339,16 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 						intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent2);
 					break;
+					
+					case 4:
+						Toast.makeText(getApplicationContext(), "In construction", Toast.LENGTH_LONG).show();
+					break;
+					
+					case 5: 
+						Intent intent5 = new Intent(getApplicationContext(), DonateActivity.class);
+						intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent5);
+					break;
 									
 				}
 			}

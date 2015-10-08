@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
 public class MarketsActivity extends ListActivity implements OnItemClickListener {
@@ -271,6 +272,16 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 						intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent2);
 					break;
+					
+					case 4:
+						Toast.makeText(getApplicationContext(), "In construction", Toast.LENGTH_LONG).show();
+					break;
+					
+					case 5: 
+						Intent intent5 = new Intent(getApplicationContext(), DonateActivity.class);
+						intent5.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent5);
+					break;					
 				}				
 			}        	
         });

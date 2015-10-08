@@ -53,13 +53,14 @@
             android:name=".activities.MarketsActivity"
             android:label="@string/title_activity_markets"
             android:parentActivityName="android.app.ListActivity" >
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="android.app.ListActivity" />
         </activity>
         <activity
-            android:name="com.haya.tabulae.activities.SettingsActivity"
+            android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings" >
+        </activity>
+        <activity
+            android:name="com.haya.tabulae.activities.DonateActivity"
+            android:label="@string/title_activity_donate" >
         </activity>
     </application>
 
