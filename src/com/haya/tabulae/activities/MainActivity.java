@@ -606,11 +606,5 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		adapterListedItems.notifyDataSetChanged();
 	}
 	
-	// Market
-	public void addMarket(View v) {
-		
-		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
-		startActivityForResult(intent, Utils.NEW_MARKET_RESULT);
-	}
 		
 }
