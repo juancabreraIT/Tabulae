@@ -1,54 +1,44 @@
 package com.haya.tabulae.activities;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.DrawerItemsAdapter;
-import com.haya.tabulae.adapters.ItemAdapter;
-import com.haya.tabulae.models.Item;
-import com.haya.tabulae.models.ListedItem;
+import com.haya.tabulae.adapters.MarketAdapter;
+import com.haya.tabulae.models.Market;
 import com.haya.tabulae.utils.Utils;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ListActivity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
-import android.text.InputType;
 import android.view.ActionMode;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager.LayoutParams;
 import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 @SuppressWarnings("deprecation")
-public class ItemsActivity extends ListActivity implements OnItemClickListener {
+public class MarketsActivity extends ListActivity implements OnItemClickListener {
 
 	private ActionBarDrawerToggle mDrawerToggle;
 	private DrawerItemsAdapter adapterDrawer;
-	
 	private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
-	
-	private ArrayList<Item> allItems;
-	private ItemAdapter adapterList;
+    
+    private ArrayList<Market> allMarkets;
+	private MarketAdapter adapterList;
 	
 	@SuppressWarnings("unused")
 	private ActionMode actionMode;
@@ -56,7 +46,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_items);
+		setContentView(R.layout.activity_markets);
 		Utils.setActionBar(this, android.R.color.holo_purple);
 		
 		loadDrawer();
@@ -64,7 +54,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		
 		getListView().setOnItemClickListener(this);
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-				
+		
 		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			
 			private int numSelected = 0;
@@ -93,13 +83,13 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 				switch (item.getItemId()) {
 
                 case R.id.item_delete:
-                	deleteItemsDialog(numSelected, mode);
+//                	deleteItemsDialog(numSelected, mode);
                     numSelected = 0;
                     break;
 
                 case R.id.item_select_all:
                 	checkAllItems();
-                	numSelected = allItems.size();
+                	numSelected = allMarkets.size();
                 	adapterList.selectAll(numSelected);
                 	mode.setTitle(numSelected + " selected");
                 	break;
@@ -131,56 +121,58 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 			}
 		});	
 		
+
+		
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-
-		getMenuInflater().inflate(R.menu.menu_items, menu);
+		getMenuInflater().inflate(R.menu.menu_markets, menu);
 		return true;
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
 		int id = item.getItemId();
-		
+
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
 		
 		switch(id) {
 			case R.id.action_add:
-				addItemDialog();
+//				addItemDialog();
 				break;
 			case android.R.id.home:
 				finish();
 				break;
 		}
 		
+		
 		return super.onOptionsItemSelected(item);
 	}
-		
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch(requestCode) {			
-			case (Utils.ITEM_DETAIL) :
+			case (Utils.MARKET_DETAIL) :
 				if (resultCode == Activity.RESULT_OK) {
 					adapterList.notifyDataSetChanged();
 				}
 		}
-	}
+	}	
 	
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+//		Intent intent = new Intent(this, MarketDetailActivity.class);
+//		long idItem = allMarkets.get(position).getId();
+//		intent.putExtra("idItem", idItem);
+//		
+//		startActivityForResult(intent, Utils.MARKET_DETAIL);
 		
-		Intent intent = new Intent(this, ItemDetailActivity.class);
-		long idItem = allItems.get(position).getId();
-		intent.putExtra("idItem", idItem);
-		
-		startActivityForResult(intent, Utils.ITEM_DETAIL);
 	}
 
 	@Override
@@ -212,8 +204,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
         menu.findItem(R.id.action_add).setVisible(!drawerOpen);
         return super.onPrepareOptionsMenu(menu);
     }
-	
-	
+
 	private void checkAllItems() {
 		
 		for(int i = 0; i < getListView().getCount(); i++) {
@@ -227,31 +218,31 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         
         mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
+                this,                  			/* host Activity */
+                mDrawerLayout,         			/* DrawerLayout object */
                 R.drawable.ic_menu_white_24dp,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
+                R.string.drawer_open,  			/* "open drawer" description */
+                R.string.drawer_close  			/* "close drawer" description */
                 ) {
 
             /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle(R.string.app_name);
+                getActionBar().setTitle(R.string.my_markets);
                 invalidateOptionsMenu();
             }
 
             /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle("Select an option");
+                getActionBar().setTitle(R.string.select_option);
                 invalidateOptionsMenu();
             }
         };
         
         mDrawerLayout.setDrawerListener(mDrawerToggle);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setHomeButtonEnabled(true);				
+        getActionBar().setHomeButtonEnabled(true);
 
         mDrawerList = (ListView) findViewById(R.id.left_drawer);      
         adapterDrawer = new DrawerItemsAdapter(this, R.layout.drawer_item, R.id.drawerItemTitle, Utils.drawerList);
@@ -269,128 +260,22 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 							startActivity(intent);					
 					break;
 	
-					case 2:
-							Intent intent1 = new Intent(getApplicationContext(), MarketsActivity.class);
+					case 1:
+							Intent intent1 = new Intent(getApplicationContext(), ItemsActivity.class);
 							intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(intent1);
-					break;				
+					break;
 				}				
 			}        	
         });
 	}
-		
-	
+
 	private void populateList() {
 		
-		allItems = new Select().from(Item.class).execute();		
-		adapterList = new ItemAdapter(this, R.layout.item, R.id.ItemTitle, allItems);
+		allMarkets = new Select().from(Market.class).execute();		
+		adapterList = new MarketAdapter(this, R.layout.item, R.id.ItemTitle, allMarkets);
 		getListView().setAdapter(adapterList);
 	}
-
 	
-	// Item
-	private void addItemDialog() {
-		
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		AlertDialog dialog;
-		builder.setTitle(getResources().getText(R.string.newItem));
-
-		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_dropdown_item_1line, allItems);
-
-		final AutoCompleteTextView autoText = new AutoCompleteTextView(this);
-		autoText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_SENTENCES);
-		autoText.requestFocus();
-		autoText.setAdapter(adapter);
-		autoText.setThreshold(2);
-
-		builder.setView(autoText);
-
-		// OK
-		builder.setPositiveButton(getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() { 
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		    	String itemName = autoText.getText().toString().trim();
-		    	if ( !itemName.isEmpty() ) {
-		    		addItem(itemName);
-		    	}
-		    }
-		});
-		
-		// CANCEL
-		builder.setNegativeButton(getResources().getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
-		});
-
-		dialog = builder.create();
-		dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
-		dialog.show();
-	}
-
-	private void addItem(String itemName) {
-
-		Item item = new Select().from(Item.class).where("name = ?", itemName).executeSingle();
-
-		if ( item == null ) {
-			item = new Item(itemName);
-			item.save();						
-			allItems.add(item);
-			adapterList.notifyDataSetChanged();
-		} else {
-			Toast.makeText(this, "Item already exists!", Toast.LENGTH_LONG).show();
-		}		
-	}
-
-	
-	private void deleteItemsDialog(int numItems, final ActionMode mode) {
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		AlertDialog dialog;
-		String title = getText(R.string.deleteItem).toString() + " " + numItems + " ";
-		title += numItems > 1 ? getResources().getText(R.string.items) : getResources().getText(R.string.item); 
-		builder.setTitle(title);
-
-		// OK
-		builder.setPositiveButton(getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() { 
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		    	deleteItem(mode);
-		    }
-		});
-		
-		// CANCEL
-		builder.setNegativeButton(getResources().getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
-		    @Override
-		    public void onClick(DialogInterface dialog, int which) {
-		        dialog.cancel();
-		    }
-		});
-
-		dialog = builder.create();
-		dialog.show();		
-	}
-
-	private void deleteItem(ActionMode mode) {
-		
-		Iterator<Integer> it = adapterList.getCurrentSelectedPosition().iterator();
-        ArrayList<Item> deletedItems = new ArrayList<Item>();
-        
-        while ( it.hasNext() ) {
-        	int index = it.next().intValue();
-        	Item temp = allItems.get(index);
-        	deletedItems.add(temp);
-        	
-        	ListedItem listed = new Select().from(ListedItem.class).where("item = ?", temp.getId()).executeSingle();
-        	if ( listed != null ) {
-        		listed.delete();
-        	}
-        	temp.delete();
-        }
-        
-        allItems.removeAll(deletedItems);
-        adapterList.clearSelection();
-        mode.finish();        
-	}
-
 }
+

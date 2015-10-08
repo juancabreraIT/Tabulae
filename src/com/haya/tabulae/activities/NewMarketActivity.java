@@ -30,7 +30,7 @@ public class NewMarketActivity extends Activity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_market, menu);
+		getMenuInflater().inflate(R.menu.menu_market_detail, menu);
 		return true;
 	}
 

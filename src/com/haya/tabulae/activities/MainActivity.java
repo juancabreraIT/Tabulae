@@ -322,17 +322,19 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 				
 				mDrawerLayout.closeDrawer(Gravity.START);				
 				switch(position) {		
-					case 0:
-							Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+					case 1:
+						Intent intent1 = new Intent(getApplicationContext(), ItemsActivity.class);
+						intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent1);
+					break;	
+				
+					case 2:
+							Intent intent = new Intent(getApplicationContext(), MarketsActivity.class);
 							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(intent);					
 					break;
 	
-					case 1:
-							Intent intent1 = new Intent(getApplicationContext(), ItemsActivity.class);
-							intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(intent1);
-					break;				
+									
 				}
 			}
         });

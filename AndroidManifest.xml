@@ -46,8 +46,16 @@
             android:label="@string/title_activity_item_detail" >
         </activity>
         <activity
-            android:name="com.haya.tabulae.activities.ItemsActivity"
+            android:name=".activities.ItemsActivity"
             android:label="@string/title_activity_items" >
+        </activity>
+        <activity
+            android:name="com.haya.tabulae.activities.MarketsActivity"
+            android:label="@string/title_activity_markets"
+            android:parentActivityName="android.app.ListActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="android.app.ListActivity" />
         </activity>
     </application>
 

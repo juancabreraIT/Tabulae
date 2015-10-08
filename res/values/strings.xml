@@ -32,4 +32,6 @@
     <string name="about">About</string>
     <string name="donate">Donate</string>
     <string name="select_option">Select an option</string>
+    <string name="title_activity_markets">My markets</string>
+
 </resources>
