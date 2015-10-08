@@ -25,6 +25,10 @@ public class Item extends Model {
 		return getMany(Price.class, "item");
 	}
 	
+	public List<Price> listedItem() {
+		return getMany(ListedItem.class, "item");
+	}
+	
 	public Item() {
 		super();
 	}

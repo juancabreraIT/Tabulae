@@ -484,7 +484,15 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			
 			startItemDetail(listedItems.size() - 1);
 		} else {
-			ListedItem listedItem = new ListedItem(Utils.DEFAULT_LIST, item);
+
+			ListedItem listedItem = new Select().from(ListedItem.class).where("item = ?", item.getId()).executeSingle();
+			
+			if ( listedItem != null && listedItems.indexOf(listedItem) >= 0 ) {
+				Toast.makeText(this, "Item is already on the list", Toast.LENGTH_LONG).show();
+				return;
+			}
+			
+			listedItem = new ListedItem(Utils.DEFAULT_LIST, item);
 			listedItems.add(listedItem);
 			listedItem.save();
 			adapterListedItems.notifyDataSetChanged();
