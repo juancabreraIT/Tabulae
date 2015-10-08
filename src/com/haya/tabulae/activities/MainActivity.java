@@ -66,8 +66,6 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
 
-	private final int NEW_MARKET_RESULT = 100;	
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -232,7 +230,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch(requestCode) {
-			case (NEW_MARKET_RESULT) :
+			case (Utils.NEW_MARKET_RESULT) :
 			      if (resultCode == Activity.RESULT_OK) {
 			    	  loadMarkets();
 			      }
@@ -612,7 +610,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	public void addMarket(View v) {
 		
 		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
-		startActivityForResult(intent, NEW_MARKET_RESULT);
+		startActivityForResult(intent, Utils.NEW_MARKET_RESULT);
 	}
 		
 }

@@ -142,7 +142,7 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 		
 		switch(id) {
 			case R.id.action_add:
-//				addItemDialog();
+				addMarket();
 				break;
 			case android.R.id.home:
 				finish();
@@ -158,9 +158,9 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 		super.onActivityResult(requestCode, resultCode, data);
 
 		switch(requestCode) {			
-			case (Utils.MARKET_DETAIL) :
+			case (Utils.NEW_MARKET_RESULT) :
 				if (resultCode == Activity.RESULT_OK) {
-					adapterList.notifyDataSetChanged();
+					populateList();
 				}
 		}
 	}	
@@ -294,5 +294,9 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 		getListView().setAdapter(adapterList);
 	}
 	
+	private void addMarket() {
+		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
+		startActivityForResult(intent, Utils.NEW_MARKET_RESULT);
+	}
 }
 
