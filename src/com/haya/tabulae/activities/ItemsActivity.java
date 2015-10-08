@@ -5,20 +5,26 @@ import java.util.Iterator;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.DrawerItemsAdapter;
 import com.haya.tabulae.adapters.ItemAdapter;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.models.ListedItem;
 import com.haya.tabulae.utils.Utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,32 +39,34 @@ import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+@SuppressWarnings("deprecation")
 public class ItemsActivity extends ListActivity implements OnItemClickListener {
 
+	private ActionBarDrawerToggle mDrawerToggle;
+	private DrawerItemsAdapter adapterDrawer;
+	
+	private DrawerLayout mDrawerLayout;
+    private ListView mDrawerList;
+	
 	private ArrayList<Item> allItems;
 	private ItemAdapter adapterList;
 	
+	@SuppressWarnings("unused")
 	private ActionMode actionMode;
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_items);
 		getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
 		Utils.setBackground(this, android.R.color.holo_purple);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setLogo(R.drawable.ic_arrow_back);
 		
+		loadDrawer();
 		populateList();
 		
 		getListView().setOnItemClickListener(this);
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
-		
-		if ( actionMode != null ) {
-			actionMode.finish();
-		}
-		
+				
 		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			
 			private int numSelected = 0;
@@ -139,6 +147,10 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 
 		int id = item.getItemId();
 		
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		
 		switch(id) {
 			case R.id.action_add:
 				addItemDialog();
@@ -172,6 +184,37 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		
 		startActivityForResult(intent, Utils.ITEM_DETAIL);
 	}
+
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+	
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }
+	
+	@Override
+	public void onBackPressed() {
+
+	    if ( mDrawerLayout.isDrawerOpen(Gravity.START) ) {
+	    	mDrawerLayout.closeDrawer(Gravity.START);
+	    } else {
+	        super.onBackPressed();
+	    }
+	}
+	
+	@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_add).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+	
 	
 	private void checkAllItems() {
 		
@@ -179,6 +222,62 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 			getListView().setItemChecked(i, true);
 		}		
 	}
+	
+	@SuppressLint("NewApi")
+	private void loadDrawer() {
+		
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        
+        mDrawerToggle = new ActionBarDrawerToggle(
+                this,                  /* host Activity */
+                mDrawerLayout,         /* DrawerLayout object */
+                R.drawable.ic_menu_white_24dp,  /* nav drawer icon to replace 'Up' caret */
+                R.string.drawer_open,  /* "open drawer" description */
+                R.string.drawer_close  /* "close drawer" description */
+                ) {
+
+            /** Called when a drawer has settled in a completely closed state. */
+            public void onDrawerClosed(View view) {
+                super.onDrawerClosed(view);
+                getActionBar().setTitle(R.string.app_name);
+                invalidateOptionsMenu();
+            }
+
+            /** Called when a drawer has settled in a completely open state. */
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                getActionBar().setTitle("Select an option");
+                invalidateOptionsMenu();
+            }
+        };
+        
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getActionBar().setHomeButtonEnabled(true);				
+
+        mDrawerList = (ListView) findViewById(R.id.left_drawer);      
+        adapterDrawer = new DrawerItemsAdapter(this, R.layout.drawer_item, R.id.drawerItemTitle, Utils.drawerList);
+        mDrawerList.setAdapter(adapterDrawer);
+
+        mDrawerList.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
+				
+				mDrawerLayout.closeDrawer(Gravity.START);
+				switch(position) {
+					case 0:						
+						Intent intent = new Intent(getApplicationContext(), MainActivity.class);					
+						startActivity(intent);
+					break;
+					
+					default:
+						Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();					
+				}				
+			}        	
+        });
+	}
+	
 	
 	
 	private void populateList() {
