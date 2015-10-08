@@ -302,7 +302,6 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 		startActivityForResult(intent, Utils.NEW_MARKET_RESULT);
 	}
 
-	@SuppressWarnings("unused")
 	private void deleteMarketDialog(int numItems, final ActionMode mode) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog dialog;

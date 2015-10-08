@@ -275,7 +275,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		loadDrawer();
 		loadItems();		
 		loadMarkets();
-		loadPrices();
+//		loadPrices();
 		recalculatePrice();
 	}	
 
@@ -359,23 +359,23 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		
 		if ( listedItems.isEmpty() ) {
 			Log.d("Tabulae", "Loading data base 1st time.");
-			Item item = new Item("Tomate");			
-			ListedItem temp = new ListedItem(Utils.DEFAULT_LIST, item);
-			listedItems.add(temp);
-			item.save();
-			temp.save();
-			
-			item = new Item("Pan");			
-			temp = new ListedItem(Utils.DEFAULT_LIST, item);
-			listedItems.add(temp);
-			item.save();
-			temp.save();
-
-			item = new Item("Detergente");
-			temp = new ListedItem(Utils.DEFAULT_LIST, item);
-			listedItems.add(temp);
-			item.save();
-			temp.save();
+//			Item item = new Item("Tomate");			
+//			ListedItem temp = new ListedItem(Utils.DEFAULT_LIST, item);
+//			listedItems.add(temp);
+//			item.save();
+//			temp.save();
+//			
+//			item = new Item("Pan");			
+//			temp = new ListedItem(Utils.DEFAULT_LIST, item);
+//			listedItems.add(temp);
+//			item.save();
+//			temp.save();
+//
+//			item = new Item("Detergente");
+//			temp = new ListedItem(Utils.DEFAULT_LIST, item);
+//			listedItems.add(temp);
+//			item.save();
+//			temp.save();
 		} else {
 			Log.d("Tabulae", "Data base was loaded.");
 		}
@@ -388,36 +388,36 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		
 		markets = new Select().from(Market.class).execute();
 		
-		if ( markets.isEmpty() ) {
-	
-			Market market = new Market("Mercadona");
-			markets.add(market);
-			market.save();
-
+//		if ( markets.isEmpty() ) {
+//	
+//			Market market = new Market("Mercadona");
+//			markets.add(market);
+//			market.save();
+//
+//			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
+//			marketSpinner.setAdapter(adapterSpinner);
+//		} else {
 			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
 			marketSpinner.setAdapter(adapterSpinner);
-		} else {
-			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
-			marketSpinner.setAdapter(adapterSpinner);
-		}
+//		}
 	}
 
-	private void loadPrices() {
-		
-		ArrayList<Price> prices = new Select().from(Price.class).execute();
-		
-		if ( prices.isEmpty() ) {
-			
-			for(ListedItem listedItem : listedItems) {
-				Market market = (Market) marketSpinner.getSelectedItem();
-				Price price = new Price(listedItem.getItem(), market, (float) Math.random() * 15);
-				price.save();				
-			}
-
-			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
-			marketSpinner.setAdapter(adapterSpinner);
-		}
-	}
+//	private void loadPrices() {
+//		
+//		ArrayList<Price> prices = new Select().from(Price.class).execute();
+//		
+//		if ( prices.isEmpty() ) {
+//			
+//			for(ListedItem listedItem : listedItems) {
+//				Market market = (Market) marketSpinner.getSelectedItem();
+//				Price price = new Price(listedItem.getItem(), market, (float) Math.random() * 15);
+//				price.save();				
+//			}
+//
+//			adapterSpinner = new ArrayAdapter<Market>(this, R.layout.spinner_item, markets);
+//			marketSpinner.setAdapter(adapterSpinner);
+//		}
+//	}
 	
 	private void recalculatePrice() {
 		
