@@ -1,6 +1,7 @@
 package com.haya.tabulae.activities;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
@@ -36,7 +37,6 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 	private ArrayList<Item> allItems;
 	private ItemAdapter adapterList;
 	
-	@SuppressWarnings("unused")
 	private ActionMode actionMode;
 	
 	@SuppressWarnings("deprecation")
@@ -53,6 +53,10 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		
 		getListView().setOnItemClickListener(this);
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		
+		if ( actionMode != null ) {
+			actionMode.finish();
+		}
 		
 		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
 			
@@ -82,7 +86,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 				switch (item.getItemId()) {
 
                 case R.id.item_delete:
-//                	deleteItemsDialog(numSelected, mode);
+                	deleteItemsDialog(numSelected, mode);
                     numSelected = 0;
                     break;
 
@@ -241,5 +245,48 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 	}
 
 		
+	private void deleteItemsDialog(int numItems, final ActionMode mode) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog dialog;
+		String title = getText(R.string.deleteItem).toString() + " " + numItems + " ";
+		title += numItems > 1 ? getResources().getText(R.string.items) : getResources().getText(R.string.item); 
+		builder.setTitle(title);
+
+		// OK
+		builder.setPositiveButton(getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() { 
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		    	deleteItem(mode);
+		    }
+		});
+		
+		// CANCEL
+		builder.setNegativeButton(getResources().getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        dialog.cancel();
+		    }
+		});
+
+		dialog = builder.create();
+		dialog.show();		
+	}
+
+	private void deleteItem(ActionMode mode) {
+		
+		Iterator<Integer> it = adapterList.getCurrentSelectedPosition().iterator();
+        ArrayList<Item> deletedItems = new ArrayList<Item>();
+        
+        while ( it.hasNext() ) {
+        	int index = it.next().intValue();
+        	Item temp = allItems.get(index);
+        	deletedItems.add(temp);
+        	temp.delete();
+        }
+        
+        allItems.removeAll(deletedItems);
+        adapterList.clearSelection();
+        mode.finish();        
+	}
 
 }

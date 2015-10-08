@@ -2,6 +2,7 @@ package com.haya.tabulae.adapters;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import com.haya.tabulae.R;
 import com.haya.tabulae.models.Item;
@@ -50,6 +51,10 @@ public class ItemAdapter extends ArrayAdapter<Item> {
 	public boolean isPositionSelected(int position) {
         Boolean result = mSelection.get(position);
         return result == null ? false : result;
+    }	
+
+	public Set<Integer> getCurrentSelectedPosition() {
+        return mSelection.keySet();
     }	
 	
 	@SuppressWarnings("deprecation")
