@@ -16,21 +16,28 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AbsListView.MultiChoiceModeListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class ItemsActivity extends ListActivity implements OnItemClickListener {
 
 	private ArrayList<Item> allItems;
 	private ItemAdapter adapterList;
+	
+	@SuppressWarnings("unused")
+	private ActionMode actionMode;
 	
 	@SuppressWarnings("deprecation")
 	@Override
@@ -45,6 +52,74 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		populateList();
 		
 		getListView().setOnItemClickListener(this);
+		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
+		
+		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
+			
+			private int numSelected = 0;
+
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				return false;
+			}			
+			
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				adapterList.clearSelection();
+			}
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				numSelected = 0;
+                MenuInflater inflater = getMenuInflater();
+                inflater.inflate(R.menu.menu_contextual, menu);
+                actionMode = mode;
+                return true;
+			}
+			
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				switch (item.getItemId()) {
+
+                case R.id.item_delete:
+//                	deleteItemsDialog(numSelected, mode);
+                    numSelected = 0;
+                    break;
+
+                case R.id.item_select_all:
+                	checkAllItems();
+                	numSelected = allItems.size();
+                	adapterList.selectAll(numSelected);
+                	mode.setTitle(numSelected + " selected");
+                	break;
+            	}                
+            	return false;
+			}
+			
+			@Override
+			public void onItemCheckedStateChanged(ActionMode mode, int position, long id, boolean checked) {
+				if ( checked ) {
+                    numSelected++;                    
+                } else {
+                    numSelected--;
+                }				
+				adapterList.setNewSelection(position, checked);
+                mode.setTitle(numSelected + " selected");
+            	mode.invalidate();                
+			}
+
+		});
+
+		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+				
+				getListView().setItemChecked(position, !adapterList.isPositionSelected(position));
+				return false;
+			}
+		});	
+		
 	}
 
 	@Override
@@ -70,8 +145,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		
 		return super.onOptionsItemSelected(item);
 	}
-	
-	
+		
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -90,13 +164,16 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		Intent intent = new Intent(this, ItemDetailActivity.class);
 		long idItem = allItems.get(position).getId();
 		intent.putExtra("idItem", idItem);
-	
-		Log.d("Tabulae", "id from method: " + id);
-		Log.d("Tabulae", "id from item: " + idItem);
 		
 		startActivityForResult(intent, Utils.ITEM_DETAIL);
 	}
 	
+	private void checkAllItems() {
+		
+		for(int i = 0; i < getListView().getCount(); i++) {
+			getListView().setItemChecked(i, true);
+		}		
+	}
 	
 	
 	private void populateList() {
