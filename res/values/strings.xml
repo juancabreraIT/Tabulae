@@ -11,11 +11,13 @@
     <string name="deleteItem">Delete</string>
     <string name="item">Item</string>
     <string name="items">Items</string>
+    <string name="market">Market</string>
+    <string name="markets">Markets</string>
     <string name="total">Total:</string>
     <string name="title_activity_new_market">NewMarketActivity</string>
     <string name="name">Name:</string>
     <string name="notes">Notes:</string>
-    <string name="market">Market:</string>
+    <string name="market_">Market:</string>
     <string name="title_activity_item_detail">ItemDetailActivity</string>
     <string name="euro">€</string>
     <string name="zero_value">0.00</string>

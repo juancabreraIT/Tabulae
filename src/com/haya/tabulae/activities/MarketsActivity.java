@@ -1,17 +1,13 @@
 package com.haya.tabulae.activities;
 
 import java.util.ArrayList;
-
-import com.activeandroid.query.Select;
-import com.haya.tabulae.R;
-import com.haya.tabulae.adapters.DrawerItemsAdapter;
-import com.haya.tabulae.adapters.MarketAdapter;
-import com.haya.tabulae.models.Market;
-import com.haya.tabulae.utils.Utils;
+import java.util.Iterator;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -29,6 +25,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.activeandroid.query.Select;
+import com.haya.tabulae.R;
+import com.haya.tabulae.adapters.DrawerItemsAdapter;
+import com.haya.tabulae.adapters.MarketAdapter;
+import com.haya.tabulae.models.Market;
+import com.haya.tabulae.utils.Utils;
 
 @SuppressWarnings("deprecation")
 public class MarketsActivity extends ListActivity implements OnItemClickListener {
@@ -84,7 +87,7 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 				switch (item.getItemId()) {
 
                 case R.id.item_delete:
-//                	deleteItemsDialog(numSelected, mode);
+                	deleteMarketDialog(numSelected, mode);
                     numSelected = 0;
                     break;
 
@@ -298,5 +301,51 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 		Intent intent = new Intent(getApplicationContext(), NewMarketActivity.class);
 		startActivityForResult(intent, Utils.NEW_MARKET_RESULT);
 	}
+
+	@SuppressWarnings("unused")
+	private void deleteMarketDialog(int numItems, final ActionMode mode) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		AlertDialog dialog;
+		String title = getText(R.string.deleteItem).toString() + " " + numItems + " ";
+		title += numItems > 1 ? getResources().getText(R.string.markets) : getResources().getText(R.string.market); 
+		builder.setTitle(title);
+
+		// OK
+		builder.setPositiveButton(getResources().getText(android.R.string.ok), new DialogInterface.OnClickListener() { 
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		    	deleteMarket(mode);
+		    }
+		});
+		
+		// CANCEL
+		builder.setNegativeButton(getResources().getText(android.R.string.cancel), new DialogInterface.OnClickListener() {
+		    @Override
+		    public void onClick(DialogInterface dialog, int which) {
+		        dialog.cancel();
+		    }
+		});
+
+		dialog = builder.create();
+		dialog.show();		
+	}
+	
+	private void deleteMarket(ActionMode mode) {
+		
+		Iterator<Integer> it = adapterList.getCurrentSelectedPosition().iterator();
+        ArrayList<Market> deletedMarkets = new ArrayList<Market>();
+        
+        while ( it.hasNext() ) {
+        	int index = it.next().intValue();
+        	Market temp = allMarkets.get(index);
+        	deletedMarkets.add(temp);
+        	temp.delete();
+        }
+        
+        allMarkets.removeAll(deletedMarkets);
+        adapterList.clearSelection();
+        mode.finish();
+	}
+	
 }
 
