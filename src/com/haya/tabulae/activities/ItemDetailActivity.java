@@ -44,10 +44,8 @@ public class ItemDetailActivity extends Activity implements OnItemSelectedListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_item_detail);
-		getActionBar().setTitle("Details");
-		Utils.setBackground(this, android.R.color.holo_purple);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setLogo(R.drawable.ic_arrow_back);
+		Utils.setActionBar(this, android.R.color.holo_purple, "Details");
+		Utils.setActionBarBack(this);
 
 		editName = (EditText) findViewById(R.id.editItemName);
 		editNotas = (EditText) findViewById(R.id.editItemNotes);

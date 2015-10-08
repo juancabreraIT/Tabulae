@@ -4,13 +4,57 @@ import com.haya.tabulae.R;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 
 public final class Utils {
+	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	public static void setActionBar(Activity activity, int background) {
+		
+		// Action Bar Icon
+		activity.getActionBar().setIcon(new ColorDrawable(activity.getResources().getColor(android.R.color.transparent)));
+		
+		// Action Bar Background
+		Drawable draw;
+        if(android.os.Build.VERSION.SDK_INT >= 21){
+        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+        	activity.getActionBar().setBackgroundDrawable(draw);
+        } else {
+        	draw = activity.getResources().getDrawable(background);
+        	activity.getActionBar().setBackgroundDrawable(draw);
+        }
+	}
+	
+	@SuppressWarnings("deprecation")
+	@SuppressLint("NewApi")
+	public static void setActionBar(Activity activity, int background, String title) {
+		
+		// Action Bar Title
+		activity.getActionBar().setTitle(title);
+		
+		// Action Bar Background
+		Drawable draw;
+        if(android.os.Build.VERSION.SDK_INT >= 21){
+        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+        	activity.getActionBar().setBackgroundDrawable(draw);
+        } else {
+        	draw = activity.getResources().getDrawable(background);
+        	activity.getActionBar().setBackgroundDrawable(draw);
+        }
+	}
 
+	public static void setActionBarBack(Activity activity) {
+		activity.getActionBar().setHomeButtonEnabled(true);
+		activity.getActionBar().setLogo(R.drawable.ic_arrow_back);
+	}
+	
 	@SuppressLint("NewApi")
 	@SuppressWarnings("deprecation")
 	public static void setBackground(Activity activity, int background) {
+		
+		activity.getActionBar().setIcon(new ColorDrawable(activity.getResources().getColor(android.R.color.transparent)));
 		
 		Drawable draw;
         if(android.os.Build.VERSION.SDK_INT >= 21){

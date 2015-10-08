@@ -20,7 +20,6 @@ import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -73,108 +72,10 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		getActionBar().setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-		Utils.setBackground(this, android.R.color.holo_purple);
+		Utils.setActionBar(this, android.R.color.holo_purple);
+		
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		
-		init();
-		loadData();
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-		loadItems();
-	}
-
-	@Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        // Sync the toggle state after onRestoreInstanceState has occurred.
-        mDrawerToggle.syncState();
-    }
-
-	@Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mDrawerToggle.onConfigurationChanged(newConfig);
-    }	
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main, menu);
-		return true;
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
-
-		startItemDetail(position);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		int id = item.getItemId();
-		
-		if (mDrawerToggle.onOptionsItemSelected(item)) {
-	          return true;
-        }
-		
-		switch(id) { 
-			case R.id.action_add:
-				addItemDialog();
-				return true;			
-			
-			case R.id.action_clear_list:
-				Toast.makeText(this, "Clear list", Toast.LENGTH_SHORT).show();
-				clearAllItems();
-				break;
-			case R.id.action_clear_checked_items:
-				Toast.makeText(this, "Clear selected items", Toast.LENGTH_SHORT).show();
-				clearCheckedItems();
-				break;
-		}		
-		return super.onOptionsItemSelected(item);
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-
-		switch(requestCode) {
-			case (NEW_MARKET_RESULT) :
-			      if (resultCode == Activity.RESULT_OK) {
-			    	  loadMarkets();
-			      }
-			      break;
-			case (Utils.ITEM_DETAIL) :
-				if (resultCode == Activity.RESULT_OK) {
-					recalculatePrice();
-					adapterListedItems.notifyDataSetChanged();
-				}
-		}
-	}
-
-	@Override
-	public void onBackPressed() {
-
-	    if ( mDrawerLayout.isDrawerOpen(Gravity.START) ) {
-	    	mDrawerLayout.closeDrawer(Gravity.START);
-	    } else {
-	        super.onBackPressed();
-	    }
-	}
-
-	@Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-        menu.findItem(R.id.action_add).setVisible(!drawerOpen);
-        return super.onPrepareOptionsMenu(menu);
-    }
-	
-	
-	private void init() {
 
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
@@ -268,7 +169,100 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			}
 
 		});
+
+		loadData();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadItems();
+	}
+
+	@Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        // Sync the toggle state after onRestoreInstanceState has occurred.
+        mDrawerToggle.syncState();
+    }
+
+	@Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mDrawerToggle.onConfigurationChanged(newConfig);
+    }	
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_main, menu);
+		return true;
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> arg0, View arg1, int position, long id) {
+
+		startItemDetail(position);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		int id = item.getItemId();
+		
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+	          return true;
+        }
+		
+		switch(id) { 
+			case R.id.action_add:
+				addItemDialog();
+				return true;			
+			
+			case R.id.action_clear_list:
+				clearAllItems();
+				break;
+			case R.id.action_clear_checked_items:
+				clearCheckedItems();
+				break;
+		}		
+		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch(requestCode) {
+			case (NEW_MARKET_RESULT) :
+			      if (resultCode == Activity.RESULT_OK) {
+			    	  loadMarkets();
+			      }
+			      break;
+			case (Utils.ITEM_DETAIL) :
+				if (resultCode == Activity.RESULT_OK) {
+					recalculatePrice();
+					adapterListedItems.notifyDataSetChanged();
+				}
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+
+	    if ( mDrawerLayout.isDrawerOpen(Gravity.START) ) {
+	    	mDrawerLayout.closeDrawer(Gravity.START);
+	    } else {
+	        super.onBackPressed();
+	    }
+	}
+
+	@Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+        menu.findItem(R.id.action_add).setVisible(!drawerOpen);
+        return super.onPrepareOptionsMenu(menu);
+    }
+	
+	
 	
 	private void checkAllItems() {
 		
@@ -276,7 +270,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			getListView().setItemChecked(i, true);
 		}		
 	}
-	
+
 
 	// Populate View
 	private void loadData() {
@@ -289,28 +283,26 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 
 	@SuppressLint("NewApi")
 	private void loadDrawer() {
-		
+
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        
+
         mDrawerToggle = new ActionBarDrawerToggle(
-                this,                  /* host Activity */
-                mDrawerLayout,         /* DrawerLayout object */
+                this,                  			/* host Activity */
+                mDrawerLayout,         			/* DrawerLayout object */
                 R.drawable.ic_menu_white_24dp,  /* nav drawer icon to replace 'Up' caret */
-                R.string.drawer_open,  /* "open drawer" description */
-                R.string.drawer_close  /* "close drawer" description */
+                R.string.drawer_open,  			/* "open drawer" description */
+                R.string.drawer_close  			/* "close drawer" description */
                 ) {
 
-            /** Called when a drawer has settled in a completely closed state. */
             public void onDrawerClosed(View view) {
                 super.onDrawerClosed(view);
-                getActionBar().setTitle(R.string.app_name);
+                getActionBar().setTitle(R.string.peding_shopping);
                 invalidateOptionsMenu();
             }
 
-            /** Called when a drawer has settled in a completely open state. */
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                getActionBar().setTitle("Select an option");
+                getActionBar().setTitle(R.string.select_option);
                 invalidateOptionsMenu();
             }
         };

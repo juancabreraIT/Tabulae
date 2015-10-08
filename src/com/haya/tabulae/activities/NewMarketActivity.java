@@ -21,10 +21,8 @@ public class NewMarketActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_market);
-		getActionBar().setTitle("New Market");
-		Utils.setBackground(this, android.R.color.holo_purple);
-		getActionBar().setHomeButtonEnabled(true);
-		getActionBar().setLogo(R.drawable.ic_arrow_back);
+		Utils.setActionBar(this, android.R.color.holo_purple, "New Market");
+		Utils.setActionBarBack(this);
 		
 		marketName = (EditText) findViewById(R.id.editMarketName);
 		marketNotes = (EditText) findViewById(R.id.editMarketNotes);
