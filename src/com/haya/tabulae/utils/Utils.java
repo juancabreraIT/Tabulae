@@ -22,6 +22,8 @@ public final class Utils {
         }
 	}
 
+	public final static String DEFAULT_LIST = "My quick list";
+	
 	public final static String[] drawerList = { "Pending shopping",
 												"My items", 
 												"My markets", 												

@@ -49,9 +49,6 @@ import android.widget.Toast;
 @SuppressWarnings("deprecation")
 public class MainActivity extends ListActivity implements OnItemClickListener {
 
-	// Mock
-	final static String DEFAULT_LIST = "My quick list";	
-
 	private ActionBarDrawerToggle mDrawerToggle;
 	private DrawerItemsAdapter adapterDrawer;
 	
@@ -66,8 +63,6 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 
 	private ArrayList<ListedItem> listedItems;
 	private ListedItemAdapter adapterListedItems;
-
-	private ArrayList<Item> allItems = new ArrayList<Item>();
 
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
@@ -341,19 +336,19 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		if ( listedItems.isEmpty() ) {
 			Log.d("Tabulae", "Loading data base 1st time.");
 			Item item = new Item("Tomate");			
-			ListedItem temp = new ListedItem(DEFAULT_LIST, item);
+			ListedItem temp = new ListedItem(Utils.DEFAULT_LIST, item);
 			listedItems.add(temp);
 			item.save();
 			temp.save();
 			
 			item = new Item("Pan");			
-			temp = new ListedItem(DEFAULT_LIST, item);
+			temp = new ListedItem(Utils.DEFAULT_LIST, item);
 			listedItems.add(temp);
 			item.save();
 			temp.save();
 
 			item = new Item("Detergente");
-			temp = new ListedItem(DEFAULT_LIST, item);
+			temp = new ListedItem(Utils.DEFAULT_LIST, item);
 			listedItems.add(temp);
 			item.save();
 			temp.save();
@@ -425,7 +420,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		AlertDialog dialog;
 		builder.setTitle(getResources().getText(R.string.newItem));
 
-		allItems = new Select().from(Item.class).execute();
+		ArrayList<Item> allItems = new Select().from(Item.class).execute();
 
 		ArrayAdapter<Item> adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_dropdown_item_1line, allItems);
 
@@ -469,13 +464,13 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			item = new Item(itemName);
 			item.save();
 			
-			ListedItem listedItem = new ListedItem(DEFAULT_LIST, item);
+			ListedItem listedItem = new ListedItem(Utils.DEFAULT_LIST, item);
 			listedItems.add(listedItem);
 			listedItem.save();
 			
 			startItemDetail(listedItems.size() - 1);
 		} else {
-			ListedItem listedItem = new ListedItem(DEFAULT_LIST, item);
+			ListedItem listedItem = new ListedItem(Utils.DEFAULT_LIST, item);
 			listedItems.add(listedItem);
 			listedItem.save();
 			adapterListedItems.notifyDataSetChanged();
