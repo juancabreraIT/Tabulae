@@ -331,7 +331,8 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 				mDrawerLayout.closeDrawer(Gravity.START);
 				switch(position) {
 					case 1:						
-						Intent intent = new Intent(getApplicationContext(), ItemsActivity.class);					
+						Intent intent = new Intent(getApplicationContext(), ItemsActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
 					break;
 					

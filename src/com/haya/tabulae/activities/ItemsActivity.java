@@ -267,9 +267,11 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 				mDrawerLayout.closeDrawer(Gravity.START);
 				switch(position) {
 					case 0:						
-						Intent intent = new Intent(getApplicationContext(), MainActivity.class);					
+						Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
-					break;
+					break;					
+					
 					
 					default:
 						Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();					
