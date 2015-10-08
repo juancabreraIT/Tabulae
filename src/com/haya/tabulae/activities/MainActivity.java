@@ -72,7 +72,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Utils.setActionBar(this, android.R.color.holo_purple);
+		Utils.setActionBar(this, android.R.color.holo_purple, getResources().getText(R.string.peding_shopping).toString());
 		
 		// Keep the screen on
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -321,8 +321,20 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
 				
 				mDrawerLayout.closeDrawer(Gravity.START);				
-				Utils.goToSection(MainActivity.this, position);			
-			}        	
+				switch(position) {		
+					case 0:
+							Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(intent);					
+					break;
+	
+					case 1:
+							Intent intent1 = new Intent(getApplicationContext(), ItemsActivity.class);
+							intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(intent1);
+					break;				
+				}
+			}
         });
 	}		
 	

@@ -260,10 +260,21 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
         mDrawerList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
-				
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				mDrawerLayout.closeDrawer(Gravity.START);
-				Utils.goToSection(ItemsActivity.this, position);				
+				switch(position) {
+					case 0:
+							Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(intent);					
+					break;
+	
+					case 1:
+							Intent intent1 = new Intent(getApplicationContext(), ItemsActivity.class);
+							intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+							startActivity(intent1);
+					break;				
+				}				
 			}        	
         });
 	}
