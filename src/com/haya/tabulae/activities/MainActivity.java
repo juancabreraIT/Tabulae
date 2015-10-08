@@ -81,6 +81,12 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		init();
 		loadData();
 	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		loadItems();
+	}
 
 	@Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -215,7 +221,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
                     break;
 
                 case R.id.item_select_all:
-                	Toast.makeText(getApplicationContext(), "Select all...", Toast.LENGTH_SHORT).show();
+                	checkAllItems();
                 	numSelected = listedItems.size();
                 	adapterListedItems.selectAll(numSelected);
                 	mode.setTitle(numSelected + " selected");
@@ -263,6 +269,14 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 
 		});
 	}
+	
+	private void checkAllItems() {
+		
+		for(int i = 0; i < getListView().getCount(); i++) {
+			getListView().setItemChecked(i, true);
+		}		
+	}
+	
 
 	// Populate View
 	private void loadData() {

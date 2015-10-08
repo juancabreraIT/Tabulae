@@ -7,6 +7,7 @@ import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.ItemAdapter;
 import com.haya.tabulae.models.Item;
+import com.haya.tabulae.models.ListedItem;
 import com.haya.tabulae.utils.Utils;
 
 import android.app.Activity;
@@ -281,6 +282,11 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
         	int index = it.next().intValue();
         	Item temp = allItems.get(index);
         	deletedItems.add(temp);
+        	
+        	ListedItem listed = new Select().from(ListedItem.class).where("item = ?", temp.getId()).executeSingle();
+        	if ( listed != null ) {
+        		listed.delete();
+        	}
         	temp.delete();
         }
         
