@@ -8,20 +8,26 @@ import com.haya.tabulae.adapters.ItemAdapter;
 import com.haya.tabulae.models.Item;
 import com.haya.tabulae.utils.Utils;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager.LayoutParams;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
-public class ItemsActivity extends ListActivity {
+public class ItemsActivity extends ListActivity implements OnItemClickListener {
 
 	private ArrayList<Item> allItems;
 	private ItemAdapter adapterList;
@@ -37,6 +43,8 @@ public class ItemsActivity extends ListActivity {
 		getActionBar().setLogo(R.drawable.ic_arrow_back);
 		
 		populateList();
+		
+		getListView().setOnItemClickListener(this);
 	}
 
 	@Override
@@ -62,6 +70,33 @@ public class ItemsActivity extends ListActivity {
 		
 		return super.onOptionsItemSelected(item);
 	}
+	
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		switch(requestCode) {			
+			case (Utils.ITEM_DETAIL) :
+				if (resultCode == Activity.RESULT_OK) {
+					adapterList.notifyDataSetChanged();
+				}
+		}
+	}
+	
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		
+		Intent intent = new Intent(this, ItemDetailActivity.class);
+		long idItem = allItems.get(position).getId();
+		intent.putExtra("idItem", idItem);
+	
+		Log.d("Tabulae", "id from method: " + id);
+		Log.d("Tabulae", "id from item: " + idItem);
+		
+		startActivityForResult(intent, Utils.ITEM_DETAIL);
+	}
+	
 	
 	
 	private void populateList() {
@@ -113,6 +148,7 @@ public class ItemsActivity extends ListActivity {
 		dialog.show();
 	}
 
+
 	private void addItem(String itemName) {
 
 		Item item = new Select().from(Item.class).where("name = ?", itemName).executeSingle();
@@ -126,5 +162,7 @@ public class ItemsActivity extends ListActivity {
 			Toast.makeText(this, "Item already exists!", Toast.LENGTH_LONG).show();
 		}		
 	}
+
+		
 
 }

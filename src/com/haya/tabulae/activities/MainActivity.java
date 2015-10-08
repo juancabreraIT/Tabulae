@@ -67,8 +67,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	private ArrayList<Market> markets;
 	private ArrayAdapter<Market> adapterSpinner;
 
-	private final int NEW_MARKET_RESULT = 100;
-	private final int ITEM_DETAIL = 101;	
+	private final int NEW_MARKET_RESULT = 100;	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,7 +142,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			    	  loadMarkets();
 			      }
 			      break;
-			case (ITEM_DETAIL) :
+			case (Utils.ITEM_DETAIL) :
 				if (resultCode == Activity.RESULT_OK) {
 					recalculatePrice();
 					adapterListedItems.notifyDataSetChanged();
@@ -174,7 +173,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		marketSpinner = (Spinner) findViewById(R.id.marketSelector);
 		price = (TextView) findViewById(R.id.price);		
 
-		getListView().setOnItemClickListener(this);		
+		getListView().setOnItemClickListener(this);
 		getListView().setChoiceMode(ListView.CHOICE_MODE_MULTIPLE_MODAL);
 		
 		getListView().setMultiChoiceModeListener(new MultiChoiceModeListener() {
@@ -484,7 +483,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		long idItem = listedItems.get(position).getItem().getId();
 		intent.putExtra("idItem", idItem);
 	
-		startActivityForResult(intent, ITEM_DETAIL);
+		startActivityForResult(intent, Utils.ITEM_DETAIL);
 	}
 	
 	public void checkItem(View v) {
