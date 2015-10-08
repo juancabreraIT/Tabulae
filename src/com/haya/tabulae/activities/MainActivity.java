@@ -329,11 +329,16 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 					break;	
 				
 					case 2:
-							Intent intent = new Intent(getApplicationContext(), MarketsActivity.class);
-							intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-							startActivity(intent);					
+						Intent intent = new Intent(getApplicationContext(), MarketsActivity.class);
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);					
 					break;
 	
+					case 3:
+						Intent intent2 = new Intent(getApplicationContext(), SettingsActivity.class);
+						intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent2);
+					break;
 									
 				}
 			}

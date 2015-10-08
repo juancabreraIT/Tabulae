@@ -265,6 +265,12 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 							intent1.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 							startActivity(intent1);
 					break;
+					
+					case 3:
+						Intent intent2 = new Intent(getApplicationContext(), SettingsActivity.class);
+						intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent2);
+					break;
 				}				
 			}        	
         });
