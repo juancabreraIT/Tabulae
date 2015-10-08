@@ -320,17 +320,8 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
 				
-				mDrawerLayout.closeDrawer(Gravity.START);
-				switch(position) {
-					case 1:						
-						Intent intent = new Intent(getApplicationContext(), ItemsActivity.class);
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(intent);
-					break;
-					
-					default:
-						Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();					
-				}				
+				mDrawerLayout.closeDrawer(Gravity.START);				
+				Utils.goToSection(MainActivity.this, position);			
 			}        	
         });
 	}		

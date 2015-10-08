@@ -1,13 +1,75 @@
 package com.haya.tabulae.utils;
 
 import com.haya.tabulae.R;
+import com.haya.tabulae.activities.ItemsActivity;
+import com.haya.tabulae.activities.MainActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.widget.Toast;
 
 public final class Utils {
+	
+	public static void goToSection(Activity activity, int position) {		
+		
+		String className = activity.getClass().toString();
+		
+		switch(position) {		
+			case 0:
+				if ( className.equals(MainActivity.class.toString() ) ) {
+					Intent intent = new Intent(activity, MainActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					activity.startActivity(intent);					
+				}				
+			break;
+
+			case 1:
+				if ( className.equals(ItemsActivity.class.toString() ) ) {
+					Intent intent = new Intent(activity, ItemsActivity.class);
+					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					activity.startActivity(intent);
+				}
+			break;
+			
+//			case 3:
+//				if ( className.equals(MarketsActivity.class.toString() ) ) {
+//					Intent intent = new Intent(activity, ItemsActivity.class);
+//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//					activity.startActivity(intent);
+//				}
+//			break;
+			
+//			case 4:
+//				if ( className.equals(ItemsActivity.class.toString() ) ) {
+//					Intent intent = new Intent(activity, Settings.class);
+//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//					activity.startActivity(intent);
+//				}
+//			break;
+			
+//			case 5:
+//				if ( className.equals(ItemsActivity.class.toString() ) ) {
+//					Intent intent = new Intent(activity, About.class);
+//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//					activity.startActivity(intent);
+//				}
+//			break;
+			
+//			case 6:
+//				if ( className.equals(ItemsActivity.class.toString() ) ) {
+//					Intent intent = new Intent(activity, Donate.class);
+//					intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//					activity.startActivity(intent);
+//				}
+//			break;
+
+			default:
+				Toast.makeText(activity, drawerList[position] + " pushed", Toast.LENGTH_LONG).show();
+		}
+	}
 	
 	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")

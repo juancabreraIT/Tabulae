@@ -263,22 +263,11 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				
 				
 				mDrawerLayout.closeDrawer(Gravity.START);
-				switch(position) {
-					case 0:						
-						Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(intent);
-					break;					
-					
-					
-					default:
-						Toast.makeText(getApplicationContext(), Utils.drawerList[position] + " pushed", Toast.LENGTH_LONG).show();					
-				}				
+				Utils.goToSection(ItemsActivity.this, position);				
 			}        	
         });
 	}
-	
-	
+		
 	
 	private void populateList() {
 		
@@ -329,7 +318,6 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		dialog.show();
 	}
 
-
 	private void addItem(String itemName) {
 
 		Item item = new Select().from(Item.class).where("name = ?", itemName).executeSingle();
@@ -344,7 +332,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		}		
 	}
 
-		
+	
 	private void deleteItemsDialog(int numItems, final ActionMode mode) {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		AlertDialog dialog;
