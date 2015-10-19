@@ -289,7 +289,7 @@ public class MarketsActivity extends ListActivity implements OnItemClickListener
 
 	private void populateList() {
 		
-		allMarkets = new Select().from(Market.class).execute();		
+		allMarkets = new Select().from(Market.class).orderBy("name ASC").execute();		
 		adapterList = new MarketAdapter(this, R.layout.item, R.id.ItemTitle, allMarkets);
 		getListView().setAdapter(adapterList);
 	}
