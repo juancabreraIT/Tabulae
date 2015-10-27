@@ -1,7 +1,11 @@
 package com.haya.tabulae.activities;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import org.haya.files.FilesManager;
 
 import com.activeandroid.query.Select;
 import com.haya.tabulae.R;
@@ -21,6 +25,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
@@ -377,11 +382,64 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 //			item.save();
 //			temp.save();
 		} else {
+			try {
+			exportDB();
 			Log.d("Tabulae", "Data base was loaded.");
+			} catch (IOException e) {
+				Log.d("Tabulae", "IOException exportDB: " + e.getMessage());
+			}
+			
 		}
 		adapterListedItems = new ListedItemAdapter(this, R.layout.listed_item, R.id.ItemTitle, listedItems, marketSpinner);
 		getListView().setAdapter(adapterListedItems);
 		
+	}
+		
+	private void exportDB() throws IOException {
+
+		File databaseFile = getDatabaseFile("tabulae.db");
+		File directory = getStorageDir("Tabulae");
+		File databaseBackup = new File(directory.getAbsolutePath() + "/tabulae.db");
+		
+		if ( databaseFile == null ) {
+			Log.d("Tabulae", "getDatabaseFile: tabulae.db not found");
+			return;
+		}	
+		
+		if ( !isExternalStorageWritable() ) {
+			Log.d("Tabulae", "External storage is not available");
+			return;
+		}
+
+		FilesManager.copy(databaseFile, databaseBackup);					
+	}	
+
+	private File getDatabaseFile(String fileName) {
+
+		File file = getDatabasePath(fileName);
+
+		return ( file.exists() ) ? file : null;
+	}
+		
+	/* Checks if external storage is available for read and write */
+	private boolean isExternalStorageWritable() {
+				
+	    String state = Environment.getExternalStorageState();
+	    if (Environment.MEDIA_MOUNTED.equals(state)) {
+	        return true;
+	    }
+	    return false;
+	}
+	
+	public File getStorageDir(String dirName) {
+	    // Get the directory for the user's public pictures directory.			
+		File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), dirName);
+	    file = new File(file.getParentFile().getParentFile(), dirName);
+	    if ( !file.mkdirs() ) {
+	        Log.e("Tabulae", "Directory not created");
+	    }
+	    	    
+	    return file;
 	}
 
 	private void loadMarkets() {

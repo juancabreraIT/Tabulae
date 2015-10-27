@@ -297,8 +297,8 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 		
 	
 	private void populateList() {
-		
-		allItems = new Select().from(Item.class).execute();		
+				
+		allItems = new Select().from(Item.class).orderBy("name ASC").execute();		
 		adapterList = new ItemAdapter(this, R.layout.item, R.id.ItemTitle, allItems);
 		getListView().setAdapter(adapterList);
 	}
