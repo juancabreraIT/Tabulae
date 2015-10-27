@@ -1,14 +1,13 @@
 package com.haya.tabulae.activities;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.haya.files.FilesManager;
+
 import com.activeandroid.query.Select;
-import com.haya.filemanager.FilesManager;
 import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.DrawerItemsAdapter;
 import com.haya.tabulae.adapters.ListedItemAdapter;
@@ -17,7 +16,6 @@ import com.haya.tabulae.models.ListedItem;
 import com.haya.tabulae.models.Market;
 import com.haya.tabulae.models.Price;
 import com.haya.tabulae.utils.Utils;
-import com.juanc.utils.FileManager;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -28,7 +26,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.ContactsContract.Directory;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
 import android.text.InputType;
@@ -400,33 +397,28 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		
 	private void exportDB() throws IOException {
 
-		File file = getDatabaseFile();
+		File databaseFile = getDatabaseFile("tabulae.db");
+		File directory = getStorageDir("Tabulae");
+		File databaseBackup = new File(directory.getAbsolutePath() + "/tabulae.db");
 		
-		if ( file.exists() ) {
-			Log.d("Tabulae", "DataBasePath: " + file.getAbsolutePath());
-			
-			if ( !isExternalStorageWritable() ) {
-				Log.d("Tabulae", "External storage is not available");				
-			}
+		if ( databaseFile == null ) {
+			Log.d("Tabulae", "getDatabaseFile: tabulae.db not found");
+			return;
+		}	
+		
+		if ( !isExternalStorageWritable() ) {
+			Log.d("Tabulae", "External storage is not available");
+			return;
+		}
 
-			FileInputStream in = new FileInputStream(file);						
-							
-			File directory = getStorageDir("Tabulae");
-			Log.d("Tabulae", "StorageDir: " + directory.getAbsolutePath());
-			
-			FilesManager fileManager = new FilesManager();
-			File newBackup = new File(directory.getAbsolutePath() + "/tabulae.db");
-			Log.d("Tabulae", "StorageDir: " + newBackup.getAbsolutePath());
-			fileManager.copyFile(in, newBackup);		
-			
-		} else {
-			Log.d("Tabulae", "UHH");
-			Toast.makeText(this, "UHH", Toast.LENGTH_LONG).show();
-		}		
+		FilesManager.copy(databaseFile, databaseBackup);					
 	}	
 
-	private File getDatabaseFile() {
-		return this.getDatabasePath("tabulae.db");
+	private File getDatabaseFile(String fileName) {
+
+		File file = getDatabasePath(fileName);
+
+		return ( file.exists() ) ? file : null;
 	}
 		
 	/* Checks if external storage is available for read and write */
