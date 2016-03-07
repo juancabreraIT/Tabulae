@@ -1,13 +1,14 @@
 package com.haya.tabulae.activities;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.haya.files.FilesManager;
-
 import com.activeandroid.query.Select;
+import com.haya.filemanager.FilesManager;
 import com.haya.tabulae.R;
 import com.haya.tabulae.adapters.DrawerItemsAdapter;
 import com.haya.tabulae.adapters.ListedItemAdapter;
@@ -394,24 +395,26 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 		getListView().setAdapter(adapterListedItems);
 		
 	}
-		
+
 	private void exportDB() throws IOException {
 
 		File databaseFile = getDatabaseFile("tabulae.db");
+		InputStream targetStream = new FileInputStream(databaseFile);
 		File directory = getStorageDir("Tabulae");
 		File databaseBackup = new File(directory.getAbsolutePath() + "/tabulae.db");
-		
+
 		if ( databaseFile == null ) {
 			Log.d("Tabulae", "getDatabaseFile: tabulae.db not found");
 			return;
-		}	
-		
+		}
+
 		if ( !isExternalStorageWritable() ) {
 			Log.d("Tabulae", "External storage is not available");
 			return;
 		}
-
-		FilesManager.copy(databaseFile, databaseBackup);					
+		
+		FilesManager manager = new FilesManager();
+		manager.copyFile(targetStream, databaseBackup);
 	}	
 
 	private File getDatabaseFile(String fileName) {
@@ -437,6 +440,10 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	    file = new File(file.getParentFile().getParentFile(), dirName);
 	    if ( !file.mkdirs() ) {
 	        Log.e("Tabulae", "Directory not created");
+	    }
+	    
+	    if ( file.isDirectory() ) {
+	    	Log.e("Tabulae", "Directory already exists!");
 	    }
 	    	    
 	    return file;

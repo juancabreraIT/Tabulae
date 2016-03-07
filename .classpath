@@ -7,5 +7,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="lib" path="C:/Users/Juan Miguel/Dropbox/3_Documentos/Android/Android Resources/Android Libraries/activeandroid-3.0.jar"/>
 	<classpathentry exported="true" kind="lib" path="libs/android-support-v4.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Juan Miguel/Dropbox/3_Documentos/Android/Android Resources/FilesManager.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
