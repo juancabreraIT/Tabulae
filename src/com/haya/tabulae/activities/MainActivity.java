@@ -399,10 +399,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 	private void exportDB() throws IOException {
 
 		File databaseFile = getDatabaseFile("tabulae.db");
-		InputStream targetStream = new FileInputStream(databaseFile);
-		File directory = getStorageDir("Tabulae");
-		File databaseBackup = new File(directory.getAbsolutePath() + "/tabulae.db");
-
+		
 		if ( databaseFile == null ) {
 			Log.d("Tabulae", "getDatabaseFile: tabulae.db not found");
 			return;
@@ -413,7 +410,9 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			return;
 		}
 		
-		
+		InputStream targetStream = new FileInputStream(databaseFile);
+		File directory = getStorageDir("Tabulae");
+		File databaseBackup = new File(directory.getAbsolutePath() + "/tabulae.db");
 		FilesManager manager = new FilesManager();
 		manager.copyFile(targetStream, databaseBackup);
 	}	

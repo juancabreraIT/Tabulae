@@ -38,7 +38,7 @@ public class DrawerItemsAdapter extends ArrayAdapter<String> {
 	}
 	
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	private void setBackground(View v, int background) {
 		
 		Drawable draw;

@@ -58,7 +58,7 @@ public class MarketAdapter extends ArrayAdapter<Market> {
         return mSelection.keySet();
     }
 
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -72,7 +72,7 @@ public class MarketAdapter extends ArrayAdapter<Market> {
 		return v;
 	}
 	
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	private void setBackground(View v, int background) {
 		

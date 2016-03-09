@@ -10,7 +10,7 @@ import android.support.v4.content.ContextCompat;
 
 public final class Utils {
 		
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	public static void setActionBar(Activity activity, int background) {
 		
@@ -29,7 +29,7 @@ public final class Utils {
         }
 	}
 	
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	@SuppressLint("NewApi")
 	public static void setActionBar(Activity activity, int background, String title) {
 		
@@ -58,7 +58,7 @@ public final class Utils {
 	}
 	
 	@SuppressLint("NewApi")
-	@SuppressWarnings("deprecation")
+//	@SuppressWarnings("deprecation")
 	public static void setBackground(Activity activity, int background) {
 		
 		activity.getActionBar().setIcon(new ColorDrawable(activity.getResources().getColor(android.R.color.transparent)));
