@@ -54,7 +54,7 @@
         <activity
             android:name=".activities.MarketsActivity"
             android:label="@string/title_activity_markets"
-            android:parentActivityName="android.app.ListActivity" >
+             >
         </activity>
         <activity
             android:name=".activities.SettingsActivity"

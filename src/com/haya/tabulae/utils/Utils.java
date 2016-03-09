@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
 public final class Utils {
 		
@@ -19,7 +20,8 @@ public final class Utils {
 		// Action Bar Background
 		Drawable draw;
         if(android.os.Build.VERSION.SDK_INT >= 21){
-        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+//        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+        	draw = ContextCompat.getDrawable(activity, background);
         	activity.getActionBar().setBackgroundDrawable(draw);
         } else {
         	draw = activity.getResources().getDrawable(background);
@@ -40,7 +42,9 @@ public final class Utils {
 		// Action Bar Background
 		Drawable draw;
         if(android.os.Build.VERSION.SDK_INT >= 21){
-        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+        	
+//        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+        	draw = ContextCompat.getDrawable(activity, background);
         	activity.getActionBar().setBackgroundDrawable(draw);
         } else {
         	draw = activity.getResources().getDrawable(background);
@@ -61,7 +65,8 @@ public final class Utils {
 		
 		Drawable draw;
         if(android.os.Build.VERSION.SDK_INT >= 21){
-        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+//        	draw = activity.getResources().getDrawable(background, activity.getTheme());
+        	draw = ContextCompat.getDrawable(activity, background);
         	activity.getActionBar().setBackgroundDrawable(draw);
         } else {
         	draw = activity.getResources().getDrawable(background);

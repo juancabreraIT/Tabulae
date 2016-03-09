@@ -413,6 +413,7 @@ public class MainActivity extends ListActivity implements OnItemClickListener {
 			return;
 		}
 		
+		
 		FilesManager manager = new FilesManager();
 		manager.copyFile(targetStream, databaseBackup);
 	}	
