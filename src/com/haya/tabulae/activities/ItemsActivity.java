@@ -83,7 +83,7 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
 			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 				numSelected = 0;
                 MenuInflater inflater = getMenuInflater();
-                inflater.inflate(R.menu.menu_contextual, menu);
+                inflater.inflate(R.menu.menu_contextual_items, menu);
                 actionMode = mode;
                 return true;
 			}
@@ -102,6 +102,11 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
                 	numSelected = allItems.size();
                 	adapterList.selectAll(numSelected);
                 	mode.setTitle(numSelected + " selected");
+                	break;
+                	
+                case R.id.stock_item:
+                	
+                	stockItem(mode);                	
                 	break;
             	}                
             	return false;
@@ -409,4 +414,26 @@ public class ItemsActivity extends ListActivity implements OnItemClickListener {
         mode.finish();        
 	}
 
+	private void stockItem(final ActionMode mode) {
+		
+		ArrayList<ListedItem> listedItems = new Select().from(ListedItem.class).execute();			
+		Iterator<Integer> it = adapterList.getCurrentSelectedPosition().iterator();
+		
+		while( it.hasNext() ) {
+			int index = it.next().intValue();
+        	Item temp = allItems.get(index);
+        	
+        	ListedItem listedItem = new Select().from(ListedItem.class).where("item = ?", temp.getId()).executeSingle();
+        	if ( listedItem != null ) {
+        		Toast.makeText(this, "Product already stocked", Toast.LENGTH_SHORT).show();
+        	} else {
+        		listedItem = new ListedItem(Utils.DEFAULT_LIST, temp);
+        		listedItem.save();
+        		Toast.makeText(this, "Product stocked succesfully", Toast.LENGTH_SHORT).show();
+        	}        	
+		}
+				
+		mode.finish();		
+	}
+	
 }

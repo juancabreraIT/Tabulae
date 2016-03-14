@@ -16,5 +16,13 @@
         android:title="@string/delete"
         android:titleCondensed="@string/delete">
     </item>
+    
+    <item 
+        android:id="@+id/stock_item"
+        android:icon="@android:drawable/ic_menu_add"
+        android:showAsAction="ifRoom|withText"
+        android:title="@string/stockItem"
+        android:titleCondensed="@string/stock">
+    </item>
  
 </menu>

@@ -36,5 +36,9 @@
     <string name="select_option">Select an option</string>
     <string name="title_activity_markets">My markets</string>
     <string name="title_activity_donate">Donate</string>
+    <string name="selectAll">Select All</string>
+    <string name="delete">Delete</string>
+    <string name="stockItem">Stock Item</string>
+    <string name="stock">Stock</string>
 
 </resources>
